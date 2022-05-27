@@ -24,19 +24,18 @@ public class BlockModelGenerator extends BlockModelProvider {
     private static Variant[] createRotatedVariants(ResourceLocation pModelLocation) {
         return new Variant[]{Variant.variant().with(VariantProperties.MODEL, pModelLocation), Variant.variant().with(VariantProperties.MODEL, pModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90), Variant.variant().with(VariantProperties.MODEL, pModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180), Variant.variant().with(VariantProperties.MODEL, pModelLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)};
     }
-/*
+
     private void createNightmares() {
-//        this.createSimpleFlatItemModel(MFBlocks.NIGHTMARE.get());
-        this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(MFBlocks.NIGHTMARE.get()).with(PropertyDispatch.properties(MFBlockStateProperties.NIGHTMARES,  BlockStateProperties.WATERLOGGED)
-                .select(1, false, Arrays.asList(createRotatedVariants(prefix("assets/monsterfood/models/block/nightmares"))))
-                .select(2, false, Arrays.asList(createRotatedVariants((prefix("assets/monsterfood/models/block/two_nightmares")))))
-                .select(3, false, Arrays.asList(createRotatedVariants((prefix("assets/monsterfood/models/block/three_nightmares")))))
-                .select(4, false, Arrays.asList(createRotatedVariants((prefix("assets/monsterfood/models/block/four_nightmares")))))));
+        this.blockStateOutput.accept(MultiVariantGenerator.multiVariant(MFBlocks.NIGHTMARE.get()).with(PropertyDispatch.property(MFBlockStateProperties.NIGHTMARES)
+                .select(1, Arrays.asList(createRotatedVariants(prefix("models/block/nightmares"))))
+                .select(2, Arrays.asList(createRotatedVariants((prefix("models/block/two_nightmares")))))
+                .select(3, Arrays.asList(createRotatedVariants((prefix("models/block/three_nightmares")))))
+                .select(4, Arrays.asList(createRotatedVariants((prefix("models/block/four_nightmares")))))));
     }
-*/
+
     @Override
     protected void registerModels() {
- //       this.createNightmares();
+      this.createNightmares();
     }
 
     @Override
