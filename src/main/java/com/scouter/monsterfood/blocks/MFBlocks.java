@@ -7,8 +7,10 @@ import com.scouter.monsterfood.setup.Registration;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -25,7 +27,7 @@ public class MFBlocks {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MonsterFood.MODID);
     public static final RegistryObject<Block> ORETEST = BLOCKS.register("oretest", () -> new Block(BlockBehaviour.Properties.of(Material.BAMBOO_SAPLING).strength(3.0F, 6.0F)));
-
+    public static final RegistryObject<Block> NIGHTMARE = BLOCKS.register("nightmare", ()-> new NightmareBlock(BlockBehaviour.Properties.of(Material.EGG, MaterialColor.SAND).strength(0.5F).sound(SoundType.METAL).randomTicks().noOcclusion()));
 
 
 
@@ -35,7 +37,7 @@ public class MFBlocks {
     @SubscribeEvent
     public static void registerItemblocks(RegistryEvent.Register<Item> evt) {
         IForgeRegistry<Item> r = evt.getRegistry();
-        List<RegistryObject<? extends Block>> standard = Arrays.asList(MFBlocks.ORETEST);
+        List<RegistryObject<? extends Block>> standard = Arrays.asList(MFBlocks.ORETEST, MFBlocks.NIGHTMARE);
 
         for (RegistryObject<? extends Block> b : standard) {
             LOGGER.info("Registering block item: " + b);
