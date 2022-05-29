@@ -1,0 +1,60 @@
+package com.scouter.monsterfood.datagen;
+
+import com.scouter.monsterfood.MonsterFood;
+import com.scouter.monsterfood.blocks.MFBlocks;
+import com.scouter.monsterfood.items.MFItems;
+import net.minecraft.core.Registry;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.RegistryObject;
+
+import static com.scouter.monsterfood.MonsterFood.prefix;
+
+public class ItemModelGenerator extends ItemModelProvider {
+    public ItemModelGenerator(DataGenerator generator, ExistingFileHelper existingFileHelper){
+        super(generator, MonsterFood.MODID, existingFileHelper);
+    }
+
+    @Override
+    protected void registerModels(){
+        for(Item i : Registry.ITEM){
+            if (i instanceof SpawnEggItem && i.getRegistryName().getNamespace().equals(MonsterFood.MODID)){
+                getBuilder(i.getRegistryName().getPath()).parent((getExistingFile(new ResourceLocation("item/template_spawn_egg"))));
+            }
+        }
+
+        //toBlock(MVBlocks.earth_block.get())
+        singleTex(MFItems.NIGHTMARE);
+
+    }
+    private void toBlock(Block b) {
+        toBlockModel(b, b.getRegistryName().getPath());
+    }
+
+    private void toBlockModel(Block b, String model) {
+        toBlockModel(b, prefix("block/" + model));
+    }
+
+    private void toBlockModel(Block b, ResourceLocation model) {
+        withExistingParent(b.getRegistryName().getPath(), model);
+    }
+
+    private ItemModelBuilder singleTex(RegistryObject<Item> item) {
+        return generated(item.getId().getPath(), prefix("item/" + item.getId().getPath()));
+
+
+    }
+    private ItemModelBuilder generated(String name, ResourceLocation... layers) {
+        ItemModelBuilder builder = withExistingParent(name, "item/generated");
+        for (int i = 0; i < layers.length; i++) {
+            builder = builder.texture("layer" + i, layers[i]);
+        }
+        return builder;
+    }
+}

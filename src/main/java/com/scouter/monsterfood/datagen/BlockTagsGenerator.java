@@ -23,6 +23,7 @@ public class BlockTagsGenerator extends BlockTagsProvider {
         //Add a tag for minimum requirement of tool for block
         tag(BlockTags.NEEDS_IRON_TOOL)
                 .add(MFBlocks.ORETEST.get());
+
     }
 
 

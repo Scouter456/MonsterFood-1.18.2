@@ -32,16 +32,17 @@ public class DataGenerators {
         ExistingFileHelper helper = evt.getExistingFileHelper();
         //    generator.addProvider(new LootGenerator(generator));
         //generator.addProvider(new LootGenerator(generator));
-
+        generator.addProvider(new BlockTagsGenerator(generator, helper));
     }
 
     private static void registerServerProviders(DataGenerator generator, GatherDataEvent evt) {
         ExistingFileHelper helper = evt.getExistingFileHelper();
         Set<BlockStateGenerator> set = Sets.newHashSet();
-        Consumer<BlockStateGenerator> consumer1 = set::add;
+        Consumer<BlockStateGenerator> consumer = set::add;
         generator.addProvider(new BlockstateGenerator(generator, helper));
-        generator.addProvider(new BlockModelGenerator(generator, helper, consumer1));
-        //generator.addProvider(new ItemModelGenerator(generator, helper));
+
+        generator.addProvider(new BlockModelGenerator(generator, helper, consumer));
+        generator.addProvider(new ItemModelGenerator(generator, helper));
         generator.addProvider(new LanguageGenerator(generator));
         //generator.addProvider(new AdvancementGenerator(generator, helper));
     }

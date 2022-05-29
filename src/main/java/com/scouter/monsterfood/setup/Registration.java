@@ -3,6 +3,7 @@ package com.scouter.monsterfood.setup;
 import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.blocks.MFBlocks;
 import com.scouter.monsterfood.items.MFItems;
+import com.scouter.monsterfood.world.feature.MFConfiguredFeatures;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -27,7 +28,8 @@ public class Registration {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         MFBlocks.BLOCKS.register(bus);
         MFItems.ITEMS.register(bus);
-
+        MFConfiguredFeatures.CONFIGURED_FEATURES.register(bus);
+        MFConfiguredFeatures.PLACED_FEATURES.register(bus);
     }
 
     public static final Item.Properties defaultBuilder() {
