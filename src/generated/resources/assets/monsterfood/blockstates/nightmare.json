@@ -1,0 +1,72 @@
+{
+  "variants": {
+    "nightmares=1": [
+      {
+        "model": "monsterfood:block/nightmares"
+      },
+      {
+        "model": "monsterfood:block/nightmares",
+        "y": 90
+      },
+      {
+        "model": "monsterfood:block/nightmares",
+        "y": 180
+      },
+      {
+        "model": "monsterfood:block/nightmares",
+        "y": 270
+      }
+    ],
+    "nightmares=2": [
+      {
+        "model": "monsterfood:block/two_nightmares"
+      },
+      {
+        "model": "monsterfood:block/two_nightmares",
+        "y": 90
+      },
+      {
+        "model": "monsterfood:block/two_nightmares",
+        "y": 180
+      },
+      {
+        "model": "monsterfood:block/two_nightmares",
+        "y": 270
+      }
+    ],
+    "nightmares=3": [
+      {
+        "model": "monsterfood:block/three_nightmares"
+      },
+      {
+        "model": "monsterfood:block/three_nightmares",
+        "y": 90
+      },
+      {
+        "model": "monsterfood:block/three_nightmares",
+        "y": 180
+      },
+      {
+        "model": "monsterfood:block/three_nightmares",
+        "y": 270
+      }
+    ],
+    "nightmares=4": [
+      {
+        "model": "monsterfood:block/four_nightmares"
+      },
+      {
+        "model": "monsterfood:block/four_nightmares",
+        "y": 90
+      },
+      {
+        "model": "monsterfood:block/four_nightmares",
+        "y": 180
+      },
+      {
+        "model": "monsterfood:block/four_nightmares",
+        "y": 270
+      }
+    ]
+  }
+}

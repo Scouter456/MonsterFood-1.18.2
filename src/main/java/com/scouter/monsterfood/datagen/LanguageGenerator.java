@@ -17,6 +17,7 @@ public class LanguageGenerator extends LanguageProvider {
         addBlock(MFBlocks.NIGHTMARE, "Nightmare");
 
         addItem(MFItems.bubble_lilly, "Bubble Lilly");
+        addItem(MFItems.WALKING_MUSHROOM_SPAWN_EGG, "Walking Mushroom Spawn Egg");
     }
 
     @Override

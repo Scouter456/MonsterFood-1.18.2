@@ -78,13 +78,13 @@ public class NightmareBlock extends Block {
             case 4:
                 return FOUR_NIGHTMARE_AABB;
         }
-    }/*
+    }
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockState blockstate = pContext.getLevel().getBlockState(pContext.getClickedPos());
         return blockstate.is(this) ? blockstate.setValue(NIGHTMARES, Integer.valueOf(Math.min(4, blockstate.getValue(NIGHTMARES) + 1))) : super.getStateForPlacement(pContext);
-    }*/
+    }
 
 
     @Override
@@ -106,7 +106,6 @@ public class NightmareBlock extends Block {
         if (!pState.canSurvive(pLevel, pPos)) {
             pLevel.destroyBlock(pPos, true);
         }
-
     }
 
 
