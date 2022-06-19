@@ -34,7 +34,8 @@ public class MonsterFood
         modbus.addListener(ModSetup::init);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modbus.addListener(ClientSetup::init));
 
-        forgeBus.addListener(EventPriority.HIGH, MFGeneration::onBiomeLoading);
+        forgeBus.addListener(EventPriority.HIGH, MFGeneration::generateFeatures);
+        //forgeBus.addListener(EventPriority.HIGH, MFGeneration::spawnCreatures);
         GeckoLib.initialize();
 
     }

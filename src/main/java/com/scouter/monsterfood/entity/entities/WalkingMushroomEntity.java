@@ -3,15 +3,20 @@ package com.scouter.monsterfood.entity.entities;
 import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.entity.MushroomEntity;
 import com.scouter.monsterfood.entity.ai.MushroomAttackGoal;
+import com.scouter.monsterfood.items.MFItems;
 import com.scouter.monsterfood.utils.utils;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,8 +25,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LogicalSidedProvider;
@@ -47,31 +55,30 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
 
     public static AttributeSupplier setAttributes(){
         return LivingEntity.createLivingAttributes()
-                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.3D)
                 .add(Attributes.FOLLOW_RANGE, 10.0D)
                 .add(Attributes.MAX_HEALTH, 10.0D)
-                .add(Attributes.ATTACK_DAMAGE, 3f)
-                .add(Attributes.ATTACK_SPEED, 0.5f)
+                .add(Attributes.ATTACK_DAMAGE, 12f)
+                .add(Attributes.ATTACK_SPEED, 1f)
                 .add(Attributes.MOVEMENT_SPEED, 0.2f)
                 .build();
     }
 
+
     protected void registerGoals(){
-        this.goalSelector.addGoal(1 , new FleeSunGoal(this, 1F));
-        //this.goalSelector.addGoal(1, new WalkingMushroomEntity.AttackGoal(this));
-        this.goalSelector.addGoal(4, new MushroomAttackGoal(this, 1.25D, 1));
-
-       // this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1F, 1F));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this , 1.0D));
-        this.goalSelector.addGoal(3 , new LookAtPlayerGoal(this, Player.class, 10.0F));
-        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
-        //this.goalSelector.addGoal(3 , new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(4 , new HurtByTargetGoal(this).setAlertOthers());
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-
-
+        //if(!this.getIsDead()) {
+            this.goalSelector.addGoal(1, new FloatGoal(this));
+            //this.goalSelector.addGoal(1 , new FleeSunGoal(this, 1F));
+            this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
+            this.goalSelector.addGoal(2, new MushroomAttackGoal(this, 1, 1));
+            //this.goalSelector.addGoal(2, new RandomStrollGoal(this , 1.0D));
+            this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+            this.goalSelector.addGoal(4, new HurtByTargetGoal(this).setAlertOthers());
+            this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+            this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
+       // }
     }
+
 
     @Override
     protected void updateControlFlags() {
@@ -85,6 +92,11 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
             return PlayState.CONTINUE;
         }
 
+        if(this.getIsDead() && (this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("sprayattack.walkingmushroom", true));
+            return PlayState.CONTINUE;
+        }
+
 //        if(this.isAttacking()){
 //            event.getController().setAnimation(new AnimationBuilder().addAnimation("attack.walkingmushroom", true));
 //            animTime = event.getController().getCurrentAnimation().animationLength;
@@ -95,6 +107,7 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     }
 
     private <E extends IAnimatable> PlayState predicate1(AnimationEvent<E> event) {
+
         if (this.entityData.get(STATE) == 1 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("attack.walkingmushroom", true));
             return PlayState.CONTINUE;
@@ -102,16 +115,78 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
         return PlayState.STOP;
 
     }
+
     @Override
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController(this, "controller",0, this::predicate));
         data.addAnimationController(new AnimationController(this, "controller1",0, this::predicate1));
     }
 
+
     @Override
     public AnimationFactory getFactory() {
         return this.factory;
     }
+
+    @Override
+    public void die(DamageSource source) {
+        if (!this.level.isClientSide) {
+            if (source == DamageSource.OUT_OF_WORLD) {
+                this.setIsDead(true);
+                this.level.broadcastEntityEvent(this, (byte) 3);
+                super.die(source);
+            }
+            if(!this.getIsDead()){
+                AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.level, this.getX(), this.getY(),
+                        this.getZ());
+                areaeffectcloudentity.setParticle(ParticleTypes.BUBBLE_POP);
+                areaeffectcloudentity.setRadius(3.0F);
+                areaeffectcloudentity.setDuration(55);
+                areaeffectcloudentity.setPos(this.getX(), this.getY(), this.getZ());
+                this.level.addFreshEntity(areaeffectcloudentity);
+                this.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
+                this.setIsDead(true);
+                this.level.broadcastEntityEvent(this, (byte) 3);
+                super.die(source);
+            }
+        }
+    }
+
+    @Override
+    protected void tickDeath() {
+        ++this.deathTime;
+        if (this.deathTime == 80) {
+            this.remove(Entity.RemovalReason.KILLED);
+            this.setIsDead(false);
+        }
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
+        if(this.isAlive()){
+            LOGGER.info("ITS NOT DEAD AND INTERACTION");
+            return InteractionResult.PASS;
+        }
+
+        LOGGER.info("Dead or not " + this.getIsDead());
+        if(this.getIsDead()){
+            LOGGER.info("ITS DEAD AND INTERACTION");
+            ItemStack itemstack = pPlayer.getItemInHand(pHand);
+            if(itemstack.getItem() == Items.NETHERITE_SWORD) {
+                LOGGER.info("INTERACTION AND SWORD");
+                ItemEntity item = new ItemEntity(pPlayer.level, this.getX(), this.getY(), this.getZ(), new ItemStack(MFItems.NIGHTMARE.get(), 1));
+                this.deathTime += 5;
+                this.level.addFreshEntity(item);
+            }
+        }
+        return super.mobInteract(pPlayer, pHand);
+    }
+   /*@Override
+   public void tick(){
+        if(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying()){
+            this.setIsDead(true);
+        }
+   }*/
 
     protected SoundEvent getHurtSound(DamageSource damageSource) { return SoundEvents.MAGMA_CUBE_HURT;}
 
@@ -119,13 +194,9 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
 
     protected float getSoundVolume() {return 0.2F;}
 
-
-    public boolean doHurtTarget(Entity entityIn){
-        LOGGER.info("Hurt or not?" + super.doHurtTarget(entityIn));
-        if(super.doHurtTarget(entityIn)){
-            this.setAttacking(true);
-        }
-        return true;
+    @Override
+    public int getMaxSpawnClusterSize() {
+        return 15;
     }
 
     /*static class AttackGoal extends Goal {

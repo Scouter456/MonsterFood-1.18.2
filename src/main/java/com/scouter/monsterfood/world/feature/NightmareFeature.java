@@ -25,7 +25,6 @@ public class NightmareFeature extends Feature<CountConfiguration> {
     private static final Logger LOGGER = LogUtils.getLogger();
     @Override
     public boolean place(FeaturePlaceContext<CountConfiguration> pContext) {
-        LOGGER.info("Placing!");
         int i = 0;
         Random random = pContext.random();
         WorldGenLevel worldgenlevel = pContext.level();

@@ -19,7 +19,7 @@ public class MushroomAttackGoal extends Goal {
     public MushroomAttackGoal(WalkingMushroomEntity mob, double moveSpeedAmpIn, int state) {
         this.entity = mob;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
-        //this.moveSpeedAmp = moveSpeedAmpIn;
+        this.moveSpeedAmp = moveSpeedAmpIn;
         this.stateCheck = state;
     }
 
@@ -62,20 +62,30 @@ public class MushroomAttackGoal extends Goal {
             if (inLineOfSight) {
                 //LOGGER.info("LineofSight " + inLineOfSight);
                 LOGGER.info("Distance " + this.entity.distanceTo(livingEntity));
-                if (this.entity.distanceTo(livingEntity) >= 3.0D) {
+                if (this.entity.distanceTo(livingEntity) >= 1.6D) {
                     this.entity.getNavigation().moveTo(livingEntity, this.moveSpeedAmp);
-                    this.attackTime = -5;
+                    this.entity.setAttackingState(0);
+                    this.attackTime = -3;
                 } else {
-                    if (this.attackTime == 4) {
+                    if (this.attackTime == 2) {
                         this.entity.getNavigation().moveTo(livingEntity, this.moveSpeedAmp);
                         if (d0 <= d1) {
                             //LOGGER.info("Attack state1 " + this.entity.getAttackingState());
                             this.entity.setAttackingState(stateCheck);
+                            LOGGER.info("Attacking state after timer4: " + this.entity.getAttackingState());
+                        }
+
+                    }
+                    if(attackTime == 8) {
+                        LOGGER.info("Attacking state after timer12: " + this.entity.getAttackingState());
+                        if(d0 <= d1 && this.entity.getAttackingState() == this.stateCheck) {
                             this.entity.doHurtTarget(livingEntity);
                         }
                         livingEntity.invulnerableTime = 0;
+
                     }
-                    if (this.attackTime == 8) {
+
+                    if (this.attackTime == 10) {
                         this.attackTime = -5;
                         this.entity.setAttackingState(0);
                     }

@@ -23,7 +23,9 @@ public class MFEntity {
 
     public static final RegistryObject<EntityType<WalkingMushroomEntity>> WALKINGMUSHROOM = ENTITY_TYPES.register("walking_mushroom",
             () -> EntityType.Builder.of(WalkingMushroomEntity::new, MobCategory.CREATURE)
-                    .sized(0.5f, 0.6f)
+                    .sized(0.6f, 0.6f)
                     .build(prefix("walking_mushroom").toString()));
+
+
 
 }
