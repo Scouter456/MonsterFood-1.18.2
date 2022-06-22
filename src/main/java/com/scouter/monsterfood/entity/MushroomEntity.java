@@ -1,26 +1,34 @@
 package com.scouter.monsterfood.entity;
 
 import com.scouter.monsterfood.entity.entities.WalkingMushroomEntity;
+import com.scouter.monsterfood.items.MFItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.NeutralMob;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
@@ -28,13 +36,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 import java.util.UUID;
 
-public class MushroomEntity extends PathfinderMob implements NeutralMob {
+public abstract class MushroomEntity extends PathfinderMob implements NeutralMob {
 
     private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_DEAD = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final EntityDataAccessor<Integer>  ANGER_TIME = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer>  DISTANCE = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer>  DEAD_STATE = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.INT);
 
     public static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.INT);
     private static final UniformInt ANGER_TIME_RANGE = TimeUtil.rangeOfSeconds(50, 100);
@@ -97,13 +105,41 @@ public class MushroomEntity extends PathfinderMob implements NeutralMob {
         }
 
     }
+
+    public abstract ResourceLocation getDeadLootTable();
+
+    protected ItemStack getRandomDrop(){
+        ItemStack lootItem = getItemFromLootTable();
+        if(lootItem.getItem() == MFItems.NIGHTMARE.get()){
+            this.playSound(SoundEvents.BONE_BLOCK_HIT, 1,1);
+        } else {
+            this.playSound(SoundEvents.MAGMA_CUBE_SQUISH,1,1);
+        }
+        return lootItem;
+    }
+
+
+    public ItemStack getItemFromLootTable() {
+        if(this.level.getServer() == null){
+            return ItemStack.EMPTY;
+        }
+        LootTable loottable = this.level.getServer().getLootTables().get(this.getDeadLootTable());
+        LootContext.Builder lootcontext$builder = this.createLootContext(false, DamageSource.GENERIC);
+        for (ItemStack itemstack : loottable.getRandomItems(lootcontext$builder.create(LootContextParamSets.ENTITY))) {
+            return itemstack;
+        }
+        return ItemStack.EMPTY;
+    }
+
+
+
     @Override
     public void readAdditionalSaveData(CompoundTag tag){
         super.readAdditionalSaveData(tag);
         tag.putBoolean("isAttacking", this.isAttacking());
         tag.putBoolean("isDead", this.getIsDead());
         tag.putInt("getAngerTime", this.getAngerTime());
-        tag.putInt("getDistance", this.getDistance());
+        tag.putInt("getDistance", this.getDeadState());
         tag.putInt("getAttackingState", this.getAttackingState());
     }
 
@@ -113,7 +149,7 @@ public class MushroomEntity extends PathfinderMob implements NeutralMob {
         tag.putBoolean("isAttacking", this.isAttacking());
         tag.putBoolean("isDead", this.getIsDead());
         tag.putInt("getAngerTime", this.getAngerTime());
-        tag.putInt("getDistance", this.getDistance());
+        tag.putInt("getDistance", this.getDeadState());
         tag.putInt("getAttackingState", this.getAttackingState());
     }
 
@@ -123,7 +159,7 @@ public class MushroomEntity extends PathfinderMob implements NeutralMob {
         this.entityData.define(ATTACKING, false);
         this.entityData.define(IS_DEAD, false);
         this.entityData.define(ANGER_TIME, 0);
-        this.entityData.define(DISTANCE, 0);
+        this.entityData.define(DEAD_STATE, 0);
         this.entityData.define(STATE, 0);
     }
 
@@ -137,8 +173,8 @@ public class MushroomEntity extends PathfinderMob implements NeutralMob {
     public void setAngerTime(Integer timer){
         this.entityData.set(ANGER_TIME, timer);
     }
-    public void setDistance(Integer distance){
-        this.entityData.set(DISTANCE, distance);
+    public void setDeadState(Integer state){
+        this.entityData.set(DEAD_STATE, state);
     }
     public void setAttackingState(int time){ this.entityData.set(STATE, time);}
 
@@ -149,7 +185,7 @@ public class MushroomEntity extends PathfinderMob implements NeutralMob {
         return this.entityData.get(IS_DEAD);
     }
     public Integer getAngerTime(){ return this.entityData.get(ANGER_TIME);}
-    public Integer getDistance(){ return this.entityData.get(DISTANCE);}
+    public Integer getDeadState(){ return this.entityData.get(DEAD_STATE);}
 
     public int getAttackingState(){return this.entityData.get(STATE);}
 }

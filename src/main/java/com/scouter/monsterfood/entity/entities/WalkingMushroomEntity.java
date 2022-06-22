@@ -1,15 +1,19 @@
 package com.scouter.monsterfood.entity.entities;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.entity.MushroomEntity;
 import com.scouter.monsterfood.entity.ai.MushroomAttackGoal;
+import com.scouter.monsterfood.items.KnifeItem;
 import com.scouter.monsterfood.items.MFItems;
+import com.scouter.monsterfood.utils.MFTags;
 import com.scouter.monsterfood.utils.utils;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -28,9 +32,14 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LogicalSidedProvider;
 import net.minecraftforge.fml.LogicalSide;
@@ -43,12 +52,29 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import static com.scouter.monsterfood.MonsterFood.prefix;
+
 public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static double animTime;
-
+    public static Map<Item, Integer> knives = ImmutableMap.of(
+            MFItems.WOOD_KNIFE.get(), 10,
+            MFItems.STONE_KNIFE.get(), 20,
+            MFItems.IRON_KNIFE.get(), 30,
+            MFItems.GOLDEN_KNIFE.get(), 40,
+            MFItems.DIAMOND_KNIFE.get(), 60,
+            MFItems.NETHERITE_KNIFE.get(),70,
+            MFItems.ADAMANTITE_KNIFE.get(), 80,
+            MFItems.MITHRIL_KNIFE.get(),90);
+    public static HashMap<Item, Integer> knifeChance = new HashMap<>(knives);
+    public static final ResourceLocation MUSHROOM_LOOT = prefix("entities/mushroom/walking_mushroom");
+    static Random rand = new Random();
     public WalkingMushroomEntity(EntityType<WalkingMushroomEntity> entityType, Level level) {
         super(entityType, level);
     }
@@ -155,39 +181,83 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     @Override
     protected void tickDeath() {
         ++this.deathTime;
-        if (this.deathTime == 80) {
+        if (this.deathTime >= 8000) {
             this.remove(Entity.RemovalReason.KILLED);
             this.setIsDead(false);
         }
     }
 
+    //TODO add this to MushroomEntity and make it abstract
     @Override
-    public InteractionResult mobInteract(Player pPlayer, InteractionHand pHand) {
-        if(this.isAlive()){
-            LOGGER.info("ITS NOT DEAD AND INTERACTION");
+    public ResourceLocation getDeadLootTable() {
+    return MUSHROOM_LOOT;}
+
+
+
+    @Override
+    public InteractionResult interact(Player pPlayer, InteractionHand pHand) {
+        if (this.isAlive()) {
             return InteractionResult.PASS;
+        } else if (this.getLeashHolder() == pPlayer) {
+            this.dropLeash(true, !pPlayer.getAbilities().instabuild);
+            return InteractionResult.sidedSuccess(this.level.isClientSide);
+
         }
 
-        LOGGER.info("Dead or not " + this.getIsDead());
         if(this.getIsDead()){
-            LOGGER.info("ITS DEAD AND INTERACTION");
+            if(this.level.isClientSide){
+                return InteractionResult.FAIL;
+            }
             ItemStack itemstack = pPlayer.getItemInHand(pHand);
-            if(itemstack.getItem() == Items.NETHERITE_SWORD) {
-                LOGGER.info("INTERACTION AND SWORD");
-                ItemEntity item = new ItemEntity(pPlayer.level, this.getX(), this.getY(), this.getZ(), new ItemStack(MFItems.NIGHTMARE.get(), 1));
-                this.deathTime += 5;
-                this.level.addFreshEntity(item);
+            if(itemstack.is(MFTags.Items.KNIVES)) {
+                //TODO chance drops to mushroom items also in loottable!!
+                if(this.getDeadState() == 0){
+                    chanceItemDrop(itemstack, Items.DIAMOND, pPlayer, pHand);
+                    this.setDeadState(this.getDeadState() + 1);
+                    return InteractionResult.CONSUME;
+                }
+                if(this.getDeadState() == 1){
+                    chanceItemDrop(itemstack, Items.NETHERITE_INGOT, pPlayer, pHand);
+                    this.setDeadState(this.getDeadState() + 1);
+                    return InteractionResult.CONSUME;
+                }
+                if(this.getDeadState() == 2){
+                    itemDrop(itemstack,pPlayer, pHand);
+                    this.setDeadState(this.getDeadState() + 1);
+                    return InteractionResult.CONSUME;
+                }
+                if(this.getDeadState() == 3){
+                    itemDrop(itemstack,pPlayer, pHand);
+                    this.setDeadState(0);
+                    this.remove(Entity.RemovalReason.KILLED);
+                    this.setIsDead(false);
+                    return InteractionResult.CONSUME;
+                }
+                itemstack.hurtAndBreak(10, pPlayer, (p_41300_) -> {
+                    p_41300_.broadcastBreakEvent(pHand);});
             }
         }
-        return super.mobInteract(pPlayer, pHand);
+        return InteractionResult.FAIL;
     }
-   /*@Override
-   public void tick(){
-        if(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying()){
-            this.setIsDead(true);
-        }
-   }*/
 
+    public void chanceItemDrop(ItemStack itemStack, Item item, Player pPlayer, InteractionHand pHand){
+        ItemStack drop = new ItemStack(item, 1);
+        int randomNum = rand.nextInt(100);
+        if(randomNum <= knifeChance.get(itemStack.getItem()) && !level.isClientSide){
+            this.spawnAtLocation(drop, 1);
+        }
+        itemStack.hurtAndBreak((100/(knifeChance.get(itemStack.getItem())/2))/2, pPlayer, (p_41300_) -> {
+            p_41300_.broadcastBreakEvent(pHand);});
+    }
+
+    public void itemDrop(ItemStack itemStack, Player pPlayer, InteractionHand pHand){
+        ItemStack drop = getRandomDrop();
+        if (!drop.isEmpty() && !level.isClientSide) {
+            this.spawnAtLocation(drop, 1);
+        }
+        itemStack.hurtAndBreak((100/(knifeChance.get(itemStack.getItem())/2))/2, pPlayer, (p_41300_) -> {
+            p_41300_.broadcastBreakEvent(pHand);});
+    }
     protected SoundEvent getHurtSound(DamageSource damageSource) { return SoundEvents.MAGMA_CUBE_HURT;}
 
     protected SoundEvent getDeathSound() { return SoundEvents.SNOW_GOLEM_DEATH;}
@@ -198,102 +268,5 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     public int getMaxSpawnClusterSize() {
         return 15;
     }
-
-    /*static class AttackGoal extends Goal {
-        private final WalkingMushroomEntity parentEntity;
-        private int ticksUntilNextAttack;
-
-        AttackGoal(WalkingMushroomEntity parentEntity) {
-            this.parentEntity = parentEntity;
-        }
-
-        @Override
-        public boolean canUse() {
-            return this.parentEntity.getTarget() != null;
-        }
-
-        @Override
-        public void start(){
-            super.start();
-            this.parentEntity.setAttacking(true);
-        }
-
-        @Override
-        public void stop(){
-            super.stop();
-            this.parentEntity.setAttacking(false);
-        }
-
-
-        @Override
-        public void tick(){
-            //LivingEntity livingEntity = null;
-            if(this.parentEntity.level == null || this.parentEntity.getTarget() == null){
-                LOGGER.info("Level or target is null");
-                stop();
-                return;
-            }
-            LivingEntity livingEntity = this.parentEntity.getTarget();
-
-            if(this.parentEntity.getTarget() != null){
-                livingEntity =
-            }
-            if(livingEntity == null) {
-                return;
-            }
-            if(this.parentEntity.hasLineOfSight(livingEntity)){
-
-                Level world = this.parentEntity.level;
-
-                Vec3 vector3d = this.parentEntity.getViewVector(1.0F);
-                this.parentEntity.setDistance((int)Math.floor(this.parentEntity.distanceToSqr(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ())));
-                double d0 = this.parentEntity.distanceToSqr(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
-
-                this.parentEntity.getNavigation().moveTo(livingEntity, 1F);
-                LOGGER.info("d0:" + d0);
-                LOGGER.info("d0:" + this.parentEntity.getDistance() + "ID: " + this.parentEntity.getId() + "Position: "+ this.parentEntity.position());
-                LOGGER.info("ticksUntilNextAttack: " + this.parentEntity.getTimer());
-                //LOGGER.info("d3:" + d3);
-                //LOGGER.info("d4:" + d4);
-                this.parentEntity.setTimer(this.parentEntity.getTimer().intValue() + 3);
-                if(d0 < 1.3D){
-                    this.parentEntity.setAttacking(true);
-                    this.parentEntity.setNoActionTime(10);
-                    if(this.parentEntity.getTimer() > 22 && d0 < 1.3D) {
-                        this.parentEntity.doHurtTarget(livingEntity);
-                        this.parentEntity.setTimer(0);
-                        ticksUntilNextAttack = 0;
-                    }
-//                    this.parentEntity.getTarget().hurt(this.parentEntity, this.parentEntity.getAttributeValue(Attributes.ATTACK_DAMAGE));
-//                    Object CombatTracker = new Object();
-//                    utils.enqueueTask(this.parentEntity.level, (Runnable)livingEntity.hurt(DamageSource.mobAttack(this.parentEntity), 1f),100);
-                    //this.parentEntity.getAttributeValue(Attributes.ATTACK_DAMAGE);
-                    //this.parentEntity.attr
-                } else if(d0 > 1.3D && d0 < 20D)
-                {
-
-                    ticksUntilNextAttack = 0;
-                    this.parentEntity.setTimer(0);
-                    this.parentEntity.setAttacking(false);
-                    this.parentEntity.getNavigation().moveTo(livingEntity, 1F);
-                }
-                if(d0 > 20D){
-                    this.parentEntity.setAttacking(false);
-                    this.parentEntity.getNavigation().isDone();
-                    this.parentEntity.setTimer(0);
-                }
-
-            }
-
-            this.parentEntity.getNavigation().moveTo(livingEntity, 1F);
-            this.parentEntity.lookAt(livingEntity, 30.0F, 30.0F);
-
-        }
-
-        protected double getAttackReachSqr(LivingEntity attackTarget) {
-            return (double)(this.parentEntity.getBbWidth() * 2.0F * this.parentEntity.getBbWidth() * 2.0F + attackTarget.getBbWidth());
-        }
-
-    }*/
 
 }
