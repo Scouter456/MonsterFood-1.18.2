@@ -1,0 +1,38 @@
+{
+"pools": [
+{
+"name": "walking_mushroom",
+"rolls": 1,
+"entries": [
+{
+"type": "item",
+"name": "monsterfood:nightmare",
+"weight": 60,
+"functions": [
+{
+"function": "set_count",
+"count": {
+"min": 1,
+"max": 1
+}
+}
+]
+},
+{
+"type": "minecraft:item",
+"name": "minecraft:red_mushroom",
+"weight": 40,
+"functions": [
+{
+"function": "set_count",
+"count": {
+"min": 1,
+"max": 1
+}
+}
+]
+}
+]
+}
+]
+}
