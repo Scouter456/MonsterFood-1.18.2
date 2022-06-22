@@ -11,6 +11,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -31,6 +32,15 @@ public class ItemModelGenerator extends ItemModelProvider {
 
         //toBlock(MVBlocks.earth_block.get())
         singleTex(MFItems.NIGHTMARE);
+        knife(MFItems.WOOD_KNIFE);
+        knife(MFItems.STONE_KNIFE);
+        knife(MFItems.IRON_KNIFE);
+        knife(MFItems.GOLDEN_KNIFE);
+        knife(MFItems.DIAMOND_KNIFE);
+        knife(MFItems.NETHERITE_KNIFE);
+        knife(MFItems.ADAMANTITE_KNIFE);
+        knife(MFItems.MITHRIL_KNIFE);
+
 
     }
     private void toBlock(Block b) {
@@ -47,9 +57,19 @@ public class ItemModelGenerator extends ItemModelProvider {
 
     private ItemModelBuilder singleTex(RegistryObject<Item> item) {
         return generated(item.getId().getPath(), prefix("item/" + item.getId().getPath()));
-
-
     }
+
+    private ItemModelBuilder handheld(String name, ResourceLocation... layers){
+        ItemModelBuilder builder = withExistingParent(name, prefix("item/knifehandheld"));
+        for (int i = 0; i < layers.length; i++) {
+            builder = builder.texture("layer" + i, layers[i]);
+        }
+        return builder;
+    }
+    private ItemModelBuilder knife(RegistryObject<Item> item){
+        return handheld(item.getId().getPath(), prefix("item/knives/" + item.getId().getPath()));
+    }
+
     private ItemModelBuilder generated(String name, ResourceLocation... layers) {
         ItemModelBuilder builder = withExistingParent(name, "item/generated");
         for (int i = 0; i < layers.length; i++) {

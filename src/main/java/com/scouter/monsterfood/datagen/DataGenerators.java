@@ -32,7 +32,7 @@ public class DataGenerators {
         ExistingFileHelper helper = evt.getExistingFileHelper();
         //    generator.addProvider(new LootGenerator(generator));
         //generator.addProvider(new LootGenerator(generator));
-        generator.addProvider(new BlockTagsGenerator(generator, helper));
+        //generator.addProvider(new BlockTagsGenerator(generator, helper));
     }
 
     private static void registerServerProviders(DataGenerator generator, GatherDataEvent evt) {

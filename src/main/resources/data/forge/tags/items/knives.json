@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "monsterfood:wood_knife",
+    "monsterfood:stone_knife",
+    "monsterfood:iron_knife",
+    "monsterfood:golden_knife",
+    "monsterfood:diamond_knife",
+    "monsterfood:netherite_knife",
+    "monsterfood:adamantite_knife",
+    "monsterfood:mithril_knife"
+  ]
+}

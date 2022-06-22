@@ -1,6 +1,15 @@
 {
   "block.monsterfood.nightmare": "Nightmare",
   "block.monsterfood.oretest": "Oretest",
+  "entity.monsterfood.walking_mushroom": "Walking Mushroom",
+  "item.monsterfood.adamantite_knife": "Adamantite knife",
   "item.monsterfood.bubble_lilly": "Bubble Lilly",
-  "item.monsterfood.walking_mushroom_spawn_egg": "Walking Mushroom Spawn Egg"
+  "item.monsterfood.diamond_knife": "Diamond knife",
+  "item.monsterfood.golden_knife": "Golden knife",
+  "item.monsterfood.iron_knife": "Iron knife",
+  "item.monsterfood.mithril_knife": "Mithril knife",
+  "item.monsterfood.netherite_knife": "Netherite knife",
+  "item.monsterfood.stone_knife": "Stone knife",
+  "item.monsterfood.walking_mushroom_spawn_egg": "Walking Mushroom Spawn Egg",
+  "item.monsterfood.wood_knife": "Wooden knife"
 }
