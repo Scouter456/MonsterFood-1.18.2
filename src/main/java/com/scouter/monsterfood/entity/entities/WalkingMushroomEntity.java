@@ -4,23 +4,14 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.entity.MushroomEntity;
 import com.scouter.monsterfood.entity.ai.MushroomAttackGoal;
-import com.scouter.monsterfood.items.KnifeItem;
 import com.scouter.monsterfood.items.MFItems;
 import com.scouter.monsterfood.utils.MFTags;
-import com.scouter.monsterfood.utils.utils;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.CombatTracker;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,20 +20,11 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LogicalSidedProvider;
-import net.minecraftforge.fml.LogicalSide;
 import org.slf4j.Logger;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -93,21 +75,17 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
                 .build();
     }
 
-
     protected void registerGoals(){
-        //if(!this.getIsDead()) {
+        if(!this.getIsDead()) {
             this.goalSelector.addGoal(1, new FloatGoal(this));
-            //this.goalSelector.addGoal(1 , new FleeSunGoal(this, 1F));
             this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
             this.goalSelector.addGoal(2, new MushroomAttackGoal(this, 1, 1));
-            //this.goalSelector.addGoal(2, new RandomStrollGoal(this , 1.0D));
             this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
             this.goalSelector.addGoal(4, new HurtByTargetGoal(this).setAlertOthers());
             this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
             this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
-       // }
+        }
     }
-
 
     @Override
     protected void updateControlFlags() {
@@ -122,15 +100,10 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
         }
 
         if(this.getIsDead() && (this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("sprayattack.walkingmushroom", true));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("dead.walkingmushroom", false));
             return PlayState.CONTINUE;
         }
 
-//        if(this.isAttacking()){
-//            event.getController().setAnimation(new AnimationBuilder().addAnimation("attack.walkingmushroom", true));
-//            animTime = event.getController().getCurrentAnimation().animationLength;
-            //this.setAttacking(false);
-//            return PlayState.CONTINUE;//       }
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle.walkingmushroom", true));
         return PlayState.CONTINUE;
     }
@@ -158,6 +131,12 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     }
 
     @Override
+    public void tick(){
+        super.tick();
+        LOGGER.info("UUID: " + this.getUUID() + "Dead: " + this.getIsDead());
+        LOGGER.info("UUID: " + this.getUUID() + "AttackState: " + this.getAttackingState());
+    }
+    @Override
     public void die(DamageSource source) {
         if (!this.level.isClientSide) {
             if (source == DamageSource.OUT_OF_WORLD) {
@@ -166,14 +145,6 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
                 super.die(source);
             }
             if(!this.getIsDead()){
-               /*
-                AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.level, this.getX(), this.getY(),
-                        this.getZ());
-                areaeffectcloudentity.setParticle(ParticleTypes.BUBBLE_POP);
-                areaeffectcloudentity.setRadius(3.0F);
-                areaeffectcloudentity.setDuration(55);
-                areaeffectcloudentity.setPos(this.getX(), this.getY(), this.getZ());
-                this.level.addFreshEntity(areaeffectcloudentity);*/
                 this.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
                 this.setIsDead(true);
                 this.level.broadcastEntityEvent(this, (byte) 3);
@@ -185,37 +156,22 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     @Override
     protected void tickDeath() {
         ++this.deathTime;
-        LOGGER.info("UUID: " + this.getUUID() + " Dead: " + this.getIsDead());
-        LOGGER.info("UUID: " + this.getUUID() + " deadState: " + this.getDeadState());
-        //LOGGER.info("UUID: " + this.stringUUID + " Death Time: " + this.deathTime);
         if (this.deathTime >= 8000) {
             this.remove(Entity.RemovalReason.KILLED);
             this.setIsDead(false);
         }
-        if(this.getIsDead() != true){
-            this.setIsDead(true);
-        }
+        this.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
     }
-
+//7f6705f2-81c2-4855-8661-20434bfc5e7e
+//ca728514-57a6-49eb-99fd-54ca6e740f77A
     @Override
     public ResourceLocation getDeadLootTable() {
     return MUSHROOM_LOOT;}
 
-
-    @Override
-    public void tick(){
-        super.tick();
-        LOGGER.info("UUID: " + this.getUUID() + " Clicked: " + this.getIsClicked());
-    }
     @Override
     public InteractionResult interact(Player pPlayer, InteractionHand pHand) {
         if (this.isAlive()) {
-            this.setIsClicked(true);
             return InteractionResult.PASS;
-        } else if (this.getLeashHolder() == pPlayer) {
-            this.dropLeash(true, !pPlayer.getAbilities().instabuild);
-            return InteractionResult.sidedSuccess(this.level.isClientSide);
-
         }
 
         if(this.getIsDead()){

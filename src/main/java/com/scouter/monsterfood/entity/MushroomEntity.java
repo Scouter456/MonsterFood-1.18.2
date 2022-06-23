@@ -1,5 +1,6 @@
 package com.scouter.monsterfood.entity;
 
+import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.entity.entities.WalkingMushroomEntity;
 import com.scouter.monsterfood.items.MFItems;
 import net.minecraft.core.BlockPos;
@@ -32,13 +33,14 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.util.Random;
 import java.util.UUID;
 
 public abstract class MushroomEntity extends PathfinderMob implements NeutralMob {
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static final EntityDataAccessor<Boolean> IS_DEAD = SynchedEntityData.defineId(MushroomEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> CLICKED = SynchedEntityData.defineId(MushroomEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer>  DEAD_STATE = SynchedEntityData.defineId(MushroomEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(MushroomEntity.class, EntityDataSerializers.INT);
 
@@ -134,7 +136,6 @@ public abstract class MushroomEntity extends PathfinderMob implements NeutralMob
     protected void defineSynchedData(){
         super.defineSynchedData();
         this.entityData.define(IS_DEAD, Boolean.valueOf(false));
-        this.entityData.define(CLICKED, Boolean.valueOf(false));
         this.entityData.define(ANGER_TIME, Integer.valueOf(0));
         this.entityData.define(DEAD_STATE, Integer.valueOf(0));
         this.entityData.define(ATTACK_STATE, Integer.valueOf(0));
@@ -143,26 +144,21 @@ public abstract class MushroomEntity extends PathfinderMob implements NeutralMob
     @Override
     public void addAdditionalSaveData(CompoundTag tag){
         super.addAdditionalSaveData(tag);
-        tag.putBoolean("isClicked", this.getIsClicked());
         tag.putBoolean("isDead", this.getIsDead());
         tag.putInt("getAngerTime", this.getAngerTime());
-        tag.putInt("getDistance", this.getDeadState());
+        tag.putInt("getDeadState", this.getDeadState());
         tag.putInt("getAttackingState", this.getAttackingState());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag tag){
         super.readAdditionalSaveData(tag);
-        tag.putBoolean("isClicked", this.getIsClicked());
-        tag.putBoolean("isDead", this.getIsDead());
-        tag.putInt("getAngerTime", this.getAngerTime());
-        tag.putInt("getDistance", this.getDeadState());
-        tag.putInt("getAttackingState", this.getAttackingState());
+        setIsDead(tag.getBoolean("isDead"));
+        setAngerTime(tag.getInt("getAngerTime"));
+        setDeadState(tag.getInt("getDeadState"));
+        setAttackingState(tag.getInt("getAttackingState"));
     }
 
-    public void setIsClicked(boolean isClicked){
-        this.entityData.set(CLICKED, Boolean.valueOf(isClicked));
-    }
     public void setIsDead(boolean isdead){
         this.entityData.set(IS_DEAD, Boolean.valueOf(isdead));
     }
@@ -174,9 +170,6 @@ public abstract class MushroomEntity extends PathfinderMob implements NeutralMob
     }
     public void setAttackingState(int state){ this.entityData.set(ATTACK_STATE, Integer.valueOf(state));}
 
-    public boolean getIsClicked(){
-        return this.entityData.get(CLICKED).booleanValue();
-    }
     public boolean getIsDead(){
         return this.entityData.get(IS_DEAD).booleanValue();
     }
