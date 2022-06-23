@@ -59,6 +59,9 @@ import java.util.Random;
 import static com.scouter.monsterfood.MonsterFood.prefix;
 
 public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable {
+
+
+
     private AnimationFactory factory = new AnimationFactory(this);
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -134,7 +137,7 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
 
     private <E extends IAnimatable> PlayState predicate1(AnimationEvent<E> event) {
 
-        if (this.entityData.get(STATE) == 1 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
+        if (this.entityData.get(ATTACK_STATE) == 1 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("attack.walkingmushroom", true));
             return PlayState.CONTINUE;
         }
@@ -163,13 +166,14 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
                 super.die(source);
             }
             if(!this.getIsDead()){
+               /*
                 AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.level, this.getX(), this.getY(),
                         this.getZ());
                 areaeffectcloudentity.setParticle(ParticleTypes.BUBBLE_POP);
                 areaeffectcloudentity.setRadius(3.0F);
                 areaeffectcloudentity.setDuration(55);
                 areaeffectcloudentity.setPos(this.getX(), this.getY(), this.getZ());
-                this.level.addFreshEntity(areaeffectcloudentity);
+                this.level.addFreshEntity(areaeffectcloudentity);*/
                 this.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
                 this.setIsDead(true);
                 this.level.broadcastEntityEvent(this, (byte) 3);
@@ -181,22 +185,32 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     @Override
     protected void tickDeath() {
         ++this.deathTime;
+        LOGGER.info("UUID: " + this.getUUID() + " Dead: " + this.getIsDead());
+        LOGGER.info("UUID: " + this.getUUID() + " deadState: " + this.getDeadState());
+        //LOGGER.info("UUID: " + this.stringUUID + " Death Time: " + this.deathTime);
         if (this.deathTime >= 8000) {
             this.remove(Entity.RemovalReason.KILLED);
             this.setIsDead(false);
         }
+        if(this.getIsDead() != true){
+            this.setIsDead(true);
+        }
     }
 
-    //TODO add this to MushroomEntity and make it abstract
     @Override
     public ResourceLocation getDeadLootTable() {
     return MUSHROOM_LOOT;}
 
 
-
+    @Override
+    public void tick(){
+        super.tick();
+        LOGGER.info("UUID: " + this.getUUID() + " Clicked: " + this.getIsClicked());
+    }
     @Override
     public InteractionResult interact(Player pPlayer, InteractionHand pHand) {
         if (this.isAlive()) {
+            this.setIsClicked(true);
             return InteractionResult.PASS;
         } else if (this.getLeashHolder() == pPlayer) {
             this.dropLeash(true, !pPlayer.getAbilities().instabuild);
@@ -210,7 +224,6 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
             }
             ItemStack itemstack = pPlayer.getItemInHand(pHand);
             if(itemstack.is(MFTags.Items.KNIVES)) {
-                //TODO chance drops to mushroom items also in loottable!!
                 if(this.getDeadState() == 0){
                     chanceItemDrop(itemstack, Items.DIAMOND, pPlayer, pHand);
                     this.setDeadState(this.getDeadState() + 1);

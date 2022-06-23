@@ -37,14 +37,12 @@ import java.util.Random;
 import java.util.UUID;
 
 public abstract class MushroomEntity extends PathfinderMob implements NeutralMob {
+    private static final EntityDataAccessor<Boolean> IS_DEAD = SynchedEntityData.defineId(MushroomEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> CLICKED = SynchedEntityData.defineId(MushroomEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer>  DEAD_STATE = SynchedEntityData.defineId(MushroomEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> ATTACK_STATE = SynchedEntityData.defineId(MushroomEntity.class, EntityDataSerializers.INT);
 
-    private static final EntityDataAccessor<Boolean> ATTACKING = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> IS_DEAD = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.BOOLEAN);
-
-    private static final EntityDataAccessor<Integer>  ANGER_TIME = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer>  DEAD_STATE = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.INT);
-
-    public static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(WalkingMushroomEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer>  ANGER_TIME = SynchedEntityData.defineId(MushroomEntity.class, EntityDataSerializers.INT);
     private static final UniformInt ANGER_TIME_RANGE = TimeUtil.rangeOfSeconds(50, 100);
     private UUID targetUuid;
 
@@ -132,21 +130,20 @@ public abstract class MushroomEntity extends PathfinderMob implements NeutralMob
     }
 
 
-
     @Override
-    public void readAdditionalSaveData(CompoundTag tag){
-        super.readAdditionalSaveData(tag);
-        tag.putBoolean("isAttacking", this.isAttacking());
-        tag.putBoolean("isDead", this.getIsDead());
-        tag.putInt("getAngerTime", this.getAngerTime());
-        tag.putInt("getDistance", this.getDeadState());
-        tag.putInt("getAttackingState", this.getAttackingState());
+    protected void defineSynchedData(){
+        super.defineSynchedData();
+        this.entityData.define(IS_DEAD, Boolean.valueOf(false));
+        this.entityData.define(CLICKED, Boolean.valueOf(false));
+        this.entityData.define(ANGER_TIME, Integer.valueOf(0));
+        this.entityData.define(DEAD_STATE, Integer.valueOf(0));
+        this.entityData.define(ATTACK_STATE, Integer.valueOf(0));
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag){
         super.addAdditionalSaveData(tag);
-        tag.putBoolean("isAttacking", this.isAttacking());
+        tag.putBoolean("isClicked", this.getIsClicked());
         tag.putBoolean("isDead", this.getIsDead());
         tag.putInt("getAngerTime", this.getAngerTime());
         tag.putInt("getDistance", this.getDeadState());
@@ -154,38 +151,36 @@ public abstract class MushroomEntity extends PathfinderMob implements NeutralMob
     }
 
     @Override
-    protected void defineSynchedData(){
-        super.defineSynchedData();
-        this.entityData.define(ATTACKING, false);
-        this.entityData.define(IS_DEAD, false);
-        this.entityData.define(ANGER_TIME, 0);
-        this.entityData.define(DEAD_STATE, 0);
-        this.entityData.define(STATE, 0);
+    public void readAdditionalSaveData(CompoundTag tag){
+        super.readAdditionalSaveData(tag);
+        tag.putBoolean("isClicked", this.getIsClicked());
+        tag.putBoolean("isDead", this.getIsDead());
+        tag.putInt("getAngerTime", this.getAngerTime());
+        tag.putInt("getDistance", this.getDeadState());
+        tag.putInt("getAttackingState", this.getAttackingState());
     }
 
-    public void setAttacking(boolean attacking){
-        this.entityData.set(ATTACKING, attacking);
+    public void setIsClicked(boolean isClicked){
+        this.entityData.set(CLICKED, Boolean.valueOf(isClicked));
     }
     public void setIsDead(boolean isdead){
-        this.entityData.set(IS_DEAD, isdead);
+        this.entityData.set(IS_DEAD, Boolean.valueOf(isdead));
     }
-
     public void setAngerTime(Integer timer){
-        this.entityData.set(ANGER_TIME, timer);
+        this.entityData.set(ANGER_TIME, Integer.valueOf(timer));
     }
     public void setDeadState(Integer state){
-        this.entityData.set(DEAD_STATE, state);
+        this.entityData.set(DEAD_STATE, Integer.valueOf(state));
     }
-    public void setAttackingState(int time){ this.entityData.set(STATE, time);}
+    public void setAttackingState(int state){ this.entityData.set(ATTACK_STATE, Integer.valueOf(state));}
 
-    public boolean isAttacking(){
-        return this.entityData.get(ATTACKING);
+    public boolean getIsClicked(){
+        return this.entityData.get(CLICKED).booleanValue();
     }
     public boolean getIsDead(){
-        return this.entityData.get(IS_DEAD);
+        return this.entityData.get(IS_DEAD).booleanValue();
     }
-    public Integer getAngerTime(){ return this.entityData.get(ANGER_TIME);}
+    public Integer getAngerTime(){ return this.entityData.get(ANGER_TIME).intValue();}
     public Integer getDeadState(){ return this.entityData.get(DEAD_STATE);}
-
-    public int getAttackingState(){return this.entityData.get(STATE);}
+    public int getAttackingState(){return this.entityData.get(ATTACK_STATE);}
 }
