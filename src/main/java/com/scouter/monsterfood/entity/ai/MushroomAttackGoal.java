@@ -2,6 +2,8 @@ package com.scouter.monsterfood.entity.ai;
 
 import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.entity.entities.WalkingMushroomEntity;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import org.slf4j.Logger;
@@ -44,24 +46,15 @@ public class MushroomAttackGoal extends Goal {
     }
 
     public void tick(){
-        //LOGGER.info("Running MushroomAttack Goal");
-        //LOGGER.info("Attack state " + this.entity.getAttackingState());
         LivingEntity livingEntity = this.entity.getTarget();
-
         if(livingEntity != null){
-            //LOGGER.info("LivingEntity " + livingEntity);
             boolean inLineOfSight = this.entity.getSensing().hasLineOfSight(livingEntity);
             this.attackTime++;
             this.entity.lookAt(livingEntity, 30.0F, 30.0F);
             double d0 = this.entity.distanceToSqr(livingEntity.getX(), livingEntity.getY(),
                     livingEntity.getZ());
-            LOGGER.info("d0 " + d0);
-
             double d1 = this.getAttackReachSqr(livingEntity);
-            LOGGER.info("d1 " + d1);
             if (inLineOfSight) {
-                //LOGGER.info("LineofSight " + inLineOfSight);
-                LOGGER.info("Distance " + this.entity.distanceTo(livingEntity));
                 if (this.entity.distanceTo(livingEntity) >= 1.6D) {
                     this.entity.getNavigation().moveTo(livingEntity, this.moveSpeedAmp);
                     this.entity.setAttackingState(0);
@@ -70,16 +63,20 @@ public class MushroomAttackGoal extends Goal {
                     if (this.attackTime == 2) {
                         this.entity.getNavigation().moveTo(livingEntity, this.moveSpeedAmp);
                         if (d0 <= d1) {
-                            //LOGGER.info("Attack state1 " + this.entity.getAttackingState());
                             this.entity.setAttackingState(stateCheck);
-                            LOGGER.info("Attacking state after timer4: " + this.entity.getAttackingState());
                         }
 
                     }
                     if(attackTime == 8) {
-                        LOGGER.info("Attacking state after timer12: " + this.entity.getAttackingState());
                         if(d0 <= d1 && this.entity.getAttackingState() == this.stateCheck) {
                             this.entity.doHurtTarget(livingEntity);
+                            AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.entity.getLevel(), this.entity.getX(), this.entity.getY(),
+                                    this.entity.getZ());
+                            areaeffectcloudentity.setParticle(ParticleTypes.EXPLOSION);
+                            areaeffectcloudentity.setRadius(0.1F);
+                            areaeffectcloudentity.setDuration(1);
+                            areaeffectcloudentity.setPos(this.entity.getX(), this.entity.getY() + 0.6f, this.entity.getZ());
+                            this.entity.level.addFreshEntity(areaeffectcloudentity);
                         }
                         livingEntity.invulnerableTime = 0;
 
