@@ -70,13 +70,6 @@ public class MushroomAttackGoal extends Goal {
                     if(attackTime == 8) {
                         if(d0 <= d1 && this.entity.getAttackingState() == this.stateCheck) {
                             this.entity.doHurtTarget(livingEntity);
-                            AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(this.entity.getLevel(), this.entity.getX(), this.entity.getY(),
-                                    this.entity.getZ());
-                            areaeffectcloudentity.setParticle(ParticleTypes.EXPLOSION);
-                            areaeffectcloudentity.setRadius(0.1F);
-                            areaeffectcloudentity.setDuration(1);
-                            areaeffectcloudentity.setPos(this.entity.getX(), this.entity.getY() + 0.6f, this.entity.getZ());
-                            this.entity.level.addFreshEntity(areaeffectcloudentity);
                         }
                         livingEntity.invulnerableTime = 0;
 
