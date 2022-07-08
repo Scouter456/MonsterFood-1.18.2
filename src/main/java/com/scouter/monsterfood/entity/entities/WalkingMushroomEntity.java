@@ -5,7 +5,11 @@ import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.entity.MushroomEntity;
 import com.scouter.monsterfood.entity.ai.MushroomAttackGoal;
 import com.scouter.monsterfood.items.MFItems;
+import com.scouter.monsterfood.misc.MFSounds;
 import com.scouter.monsterfood.utils.MFTags;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -23,13 +27,14 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.slf4j.Logger;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.IAnimationTickable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.CustomInstructionKeyframeEvent;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
@@ -40,14 +45,13 @@ import java.util.Random;
 
 import static com.scouter.monsterfood.MonsterFood.prefix;
 
-public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable {
+public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable, IAnimationTickable {
 
 
 
     private AnimationFactory factory = new AnimationFactory(this);
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static double animTime;
     public static Map<Item, Integer> knives = ImmutableMap.of(
             MFItems.WOOD_KNIFE.get(), 10,
             MFItems.STONE_KNIFE.get(), 20,
@@ -74,7 +78,7 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
                 .add(Attributes.MOVEMENT_SPEED, 0.2f)
                 .build();
     }
-
+    //TODO Spray attack
     protected void registerGoals(){
         if(!this.getIsDead()) {
             this.goalSelector.addGoal(1, new FloatGoal(this));
@@ -95,6 +99,7 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     }
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if(event.isMoving()) {
+
             event.getController().setAnimation(new AnimationBuilder().addAnimation("walking.walkingmushroom", true));
             return PlayState.CONTINUE;
         }
@@ -120,22 +125,23 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller",0, this::predicate));
-        data.addAnimationController(new AnimationController(this, "controller1",0, this::predicate1));
+        AnimationController<WalkingMushroomEntity> controller = new AnimationController<>(this, "controller",0, this::predicate);
+        AnimationController<WalkingMushroomEntity> controller1 = new AnimationController<>(this, "controller1",0, this::predicate1);
+        data.addAnimationController(controller);
+        data.addAnimationController(controller1);
     }
-
 
     @Override
     public AnimationFactory getFactory() {
         return this.factory;
     }
 
+
     @Override
-    public void tick(){
-        super.tick();
-        LOGGER.info("UUID: " + this.getUUID() + "Dead: " + this.getIsDead());
-        LOGGER.info("UUID: " + this.getUUID() + "AttackState: " + this.getAttackingState());
+    public int tickTimer() {
+        return tickCount;
     }
+
     @Override
     public void die(DamageSource source) {
         if (!this.level.isClientSide) {
@@ -162,8 +168,7 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
         }
         this.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
     }
-//7f6705f2-81c2-4855-8661-20434bfc5e7e
-//ca728514-57a6-49eb-99fd-54ca6e740f77A
+
     @Override
     public ResourceLocation getDeadLootTable() {
     return MUSHROOM_LOOT;}
@@ -181,12 +186,12 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
             ItemStack itemstack = pPlayer.getItemInHand(pHand);
             if(itemstack.is(MFTags.Items.KNIVES)) {
                 if(this.getDeadState() == 0){
-                    chanceItemDrop(itemstack, Items.DIAMOND, pPlayer, pHand);
+                    chanceItemDrop(itemstack, MFItems.WALKING_MUSHROOM_BODY.get(), pPlayer, pHand);
                     this.setDeadState(this.getDeadState() + 1);
                     return InteractionResult.CONSUME;
                 }
                 if(this.getDeadState() == 1){
-                    chanceItemDrop(itemstack, Items.NETHERITE_INGOT, pPlayer, pHand);
+                    chanceItemDrop(itemstack, MFItems.WALKING_MUSHROOM_FEET.get(), pPlayer, pHand);
                     this.setDeadState(this.getDeadState() + 1);
                     return InteractionResult.CONSUME;
                 }
@@ -212,7 +217,7 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     public void chanceItemDrop(ItemStack itemStack, Item item, Player pPlayer, InteractionHand pHand){
         ItemStack drop = new ItemStack(item, 1);
         int randomNum = rand.nextInt(100);
-        if(randomNum <= knifeChance.get(itemStack.getItem()) && !level.isClientSide){
+        if(randomNum <= (knifeChance.get(itemStack.getItem())/2) && !level.isClientSide){
             this.spawnAtLocation(drop, 1);
         }
         itemStack.hurtAndBreak((100/(knifeChance.get(itemStack.getItem())/2))/2, pPlayer, (p_41300_) -> {
@@ -220,14 +225,14 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     }
 
     public void itemDrop(ItemStack itemStack, Player pPlayer, InteractionHand pHand){
-        ItemStack drop = getRandomDrop();
+        ItemStack drop = getSoundForDrop();
         if (!drop.isEmpty() && !level.isClientSide) {
             this.spawnAtLocation(drop, 1);
         }
         itemStack.hurtAndBreak((100/(knifeChance.get(itemStack.getItem())/2))/2, pPlayer, (p_41300_) -> {
             p_41300_.broadcastBreakEvent(pHand);});
     }
-    protected SoundEvent getHurtSound(DamageSource damageSource) { return SoundEvents.MAGMA_CUBE_HURT;}
+    protected SoundEvent getHurtSound(DamageSource damageSource) { return MFSounds.MUSHROOM_WALK.get();}
 
     protected SoundEvent getDeathSound() { return SoundEvents.SNOW_GOLEM_DEATH;}
 
@@ -237,5 +242,8 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     public int getMaxSpawnClusterSize() {
         return 15;
     }
+
+
+
 
 }

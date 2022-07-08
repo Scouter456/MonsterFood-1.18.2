@@ -32,6 +32,9 @@ public class ItemModelGenerator extends ItemModelProvider {
 
         //toBlock(MVBlocks.earth_block.get())
         singleTex(MFItems.NIGHTMARE);
+        singleTex(MFItems.WALKING_MUSHROOM_BODY);
+        singleTex(MFItems.WALKING_MUSHROOM_FEET);
+        singleTex(MFItems.WALKING_MUSHROOM_SLIVER);
         knife(MFItems.WOOD_KNIFE);
         knife(MFItems.STONE_KNIFE);
         knife(MFItems.IRON_KNIFE);
