@@ -5,6 +5,7 @@ import com.scouter.monsterfood.blocks.MFBlocks;
 import com.scouter.monsterfood.entity.MFEntity;
 import com.scouter.monsterfood.entity.MFEntityPlacement;
 import com.scouter.monsterfood.items.MFItems;
+import com.scouter.monsterfood.misc.MFSounds;
 import com.scouter.monsterfood.world.feature.MFConfiguredFeatures;
 import com.scouter.monsterfood.world.feature.MFFeatures;
 import net.minecraft.world.item.BlockItem;
@@ -35,8 +36,7 @@ public class Registration {
         MFConfiguredFeatures.CONFIGURED_FEATURES.register(bus);
         MFConfiguredFeatures.PLACED_FEATURES.register(bus);
         MFFeatures.FEATURES.register(bus);
-
-
+        MFSounds.SOUNDS.register(bus);
     }
 
     public static final Item.Properties defaultBuilder() {
