@@ -108,7 +108,7 @@ public abstract class MushroomEntity extends PathfinderMob implements NeutralMob
 
     public abstract ResourceLocation getDeadLootTable();
 
-    protected ItemStack getRandomDrop(){
+    protected ItemStack getSoundForDrop(){
         ItemStack lootItem = getItemFromLootTable();
         if(lootItem.getItem() == MFItems.NIGHTMARE.get()){
             this.playSound(SoundEvents.BONE_BLOCK_HIT, 1,1);

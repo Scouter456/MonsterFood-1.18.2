@@ -65,7 +65,8 @@ public class NightmareBlock extends Block {
         playerEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 1000, 1));
         //Vec3 blockpos = new Vec3(0,10,0);
         //playerEntity.move(MoverType.PLAYER, blockpos);
-        //playerEntity.push(-playerEntity.getLookAngle().x() * 10, 0, -playerEntity.getLookAngle().z() * 10);
+        //playerEntity.push(-playerEntity.getLookAngle().x() * 1, 0, -playerEntity.getLookAngle().z() * 1);
+
         super.stepOn(pLevel, pPos, pState, pEntity);
     }
 

@@ -33,11 +33,19 @@ public class MFItems {
     public static final RegistryObject<Item> MITHRIL_KNIFE = ITEMS.register("mithril_knife", () -> new KnifeItem(/**Temporary**/Tiers.NETHERITE ,Registration.defaultBuilder().fireResistant().defaultDurability(/*TODO add mithril tier*/5000)));
 
 
+
+
     //Foods
     public static final RegistryObject<Item> NIGHTMARE = fromBlock(MFBlocks.NIGHTMARE);
+    public static final RegistryObject<Item> WALKING_MUSHROOM_FEET = ITEMS.register("walkingmushroom_feet", () -> new Item(Registration.defaultBuilder()));
+    public static final RegistryObject<Item> WALKING_MUSHROOM_BODY = ITEMS.register("walkingmushroom_rump", () -> new Item(Registration.defaultBuilder()));
+    public static final RegistryObject<Item> WALKING_MUSHROOM_SLIVER = ITEMS.register("walkingmushroom_sliver", () -> new Item(Registration.defaultBuilder()));
 
     public static final RegistryObject<Item> WALKING_MUSHROOM_SPAWN_EGG = ITEMS.register("walking_mushroom_spawn_egg", ()-> new ForgeSpawnEggItem(MFEntity.WALKINGMUSHROOM,
-            0x84653b, 0xffecca, Registration.defaultBuilder()));
+            0xFFF6F6, 0xE01313, Registration.defaultBuilder()));
+
+    public static final RegistryObject<Item> LAVA_SNAIL_SPAWN_EGG = ITEMS.register("lava_snail_spawn_egg", ()-> new ForgeSpawnEggItem(MFEntity.LAVASNAIL,
+            0xFFF6F6, 0xE01313, Registration.defaultBuilder()));
     public static CreativeModeTab creativeTab = new CreativeModeTab(MonsterFood.MODID) {
         @Override
         public ItemStack makeIcon() {

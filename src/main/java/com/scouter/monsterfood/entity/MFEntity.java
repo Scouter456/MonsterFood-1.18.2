@@ -1,6 +1,7 @@
 package com.scouter.monsterfood.entity;
 
 import com.scouter.monsterfood.MonsterFood;
+import com.scouter.monsterfood.entity.entities.LavaSnailEntity;
 import com.scouter.monsterfood.entity.entities.WalkingMushroomEntity;
 import com.scouter.monsterfood.items.MFItems;
 import com.scouter.monsterfood.setup.Registration;
@@ -26,6 +27,9 @@ public class MFEntity {
                     .sized(0.6f, 0.6f)
                     .build(prefix("walking_mushroom").toString()));
 
-
+    public static final RegistryObject<EntityType<LavaSnailEntity>> LAVASNAIL = ENTITY_TYPES.register("lava_snail",
+            () -> EntityType.Builder.of(LavaSnailEntity::new, MobCategory.CREATURE)
+                    .sized(2, 0.6f)
+                    .build(prefix("lava_snail").toString()));
 
 }

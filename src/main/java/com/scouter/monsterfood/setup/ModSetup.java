@@ -3,6 +3,7 @@ package com.scouter.monsterfood.setup;
 import com.scouter.monsterfood.MonsterFood;
 import com.scouter.monsterfood.entity.MFEntity;
 import com.scouter.monsterfood.entity.MFEntityPlacement;
+import com.scouter.monsterfood.entity.entities.LavaSnailEntity;
 import com.scouter.monsterfood.entity.entities.WalkingMushroomEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.event.RegistryEvent;
@@ -22,6 +23,7 @@ public class ModSetup {
     @SubscribeEvent
     public static void onAttributeCreate(EntityAttributeCreationEvent event){
         event.put(MFEntity.WALKINGMUSHROOM.get(), WalkingMushroomEntity.setAttributes());
+        event.put(MFEntity.LAVASNAIL.get(), LavaSnailEntity.setAttributes());
     }
 
 
