@@ -6,12 +6,14 @@ import com.scouter.monsterfood.entity.MFEntity;
 import com.scouter.monsterfood.entity.renderer.LavaSnailRenderer;
 import com.scouter.monsterfood.entity.renderer.WalkingMushroomRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-@Mod.EventBusSubscriber(modid = MonsterFood.MODID, value = Dist.CLIENT,bus = Mod.EventBusSubscriber.Bus.MOD)
 
+@Mod.EventBusSubscriber(modid = MonsterFood.MODID, value = Dist.CLIENT,bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
+    private static final ResourceLocation TEXTURE = new ResourceLocation(MonsterFood.MODID, "textures/mob_effect/effect.png");
 
     public static void init(FMLClientSetupEvent event){
         RenderLayerRegistration.init();
