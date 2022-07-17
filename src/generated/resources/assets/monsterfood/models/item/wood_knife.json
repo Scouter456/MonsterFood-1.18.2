@@ -1,0 +1,6 @@
+{
+  "parent": "monsterfood:item/knifehandheld",
+  "textures": {
+    "layer0": "monsterfood:item/knives/wood_knife"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "lavalogged=false,spice_tier=1": {
+      "model": "monsterfood:block/black_spice"
+    },
+    "lavalogged=true,spice_tier=1": {
+      "model": "monsterfood:block/black_spice"
+    },
+    "lavalogged=false,spice_tier=2": {
+      "model": "monsterfood:block/red_spice"
+    },
+    "lavalogged=true,spice_tier=2": {
+      "model": "monsterfood:block/red_spice"
+    },
+    "lavalogged=false,spice_tier=3": {
+      "model": "monsterfood:block/white_spice"
+    },
+    "lavalogged=true,spice_tier=3": {
+      "model": "monsterfood:block/white_spice"
+    },
+    "lavalogged=false,spice_tier=4": {
+      "model": "monsterfood:block/black_spice"
+    },
+    "lavalogged=true,spice_tier=4": {
+      "model": "monsterfood:block/black_spice"
+    }
+  }
+}

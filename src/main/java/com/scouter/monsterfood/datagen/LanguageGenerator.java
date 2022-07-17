@@ -32,6 +32,9 @@ public class LanguageGenerator extends LanguageProvider {
         addItem(MFItems.WALKING_MUSHROOM_FEET, "Walking Mushroom Feet");
         addItem(MFItems.WALKING_MUSHROOM_BODY, "Walking Mushroom Rump");
         addItem(MFItems.WALKING_MUSHROOM_SLIVER, "Walking Mushroom Sliver");
+        addItem(MFItems.WHITE_SPICE, "White Spice");
+        addItem(MFItems.BLACK_SPICE, "Black Spice");
+        addItem(MFItems.RED_SPICE, "Red Spice");
         addBlock(MFBlocks.NIGHTMARE, "Nightmare");
 
         //EGGS

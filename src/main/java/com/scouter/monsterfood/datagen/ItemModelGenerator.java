@@ -35,6 +35,10 @@ public class ItemModelGenerator extends ItemModelProvider {
         singleTex(MFItems.WALKING_MUSHROOM_BODY);
         singleTex(MFItems.WALKING_MUSHROOM_FEET);
         singleTex(MFItems.WALKING_MUSHROOM_SLIVER);
+        singleTex(MFItems.WHITE_SPICE);
+        singleTex(MFItems.RED_SPICE);
+        singleTex(MFItems.BLACK_SPICE);
+        toBlockModel(MFBlocks.GOLD_TRAPDOOR.get(), "gold_trapdoor_bottom");
         knife(MFItems.WOOD_KNIFE);
         knife(MFItems.STONE_KNIFE);
         knife(MFItems.IRON_KNIFE);

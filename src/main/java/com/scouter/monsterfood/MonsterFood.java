@@ -1,6 +1,7 @@
 package com.scouter.monsterfood;
 
 import com.mojang.logging.LogUtils;
+import com.scouter.monsterfood.events.ClientEvents;
 import com.scouter.monsterfood.setup.ClientSetup;
 import com.scouter.monsterfood.setup.ModSetup;
 import com.scouter.monsterfood.setup.Registration;
@@ -33,7 +34,7 @@ public class MonsterFood
         IEventBus modbus = FMLJavaModLoadingContext.get().getModEventBus();
         modbus.addListener(ModSetup::init);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> modbus.addListener(ClientSetup::init));
-
+        MinecraftForge.EVENT_BUS.register(ClientEvents.class);
         forgeBus.addListener(EventPriority.HIGH, MFGeneration::generateFeatures);
         //forgeBus.addListener(EventPriority.HIGH, MFGeneration::spawnCreatures);
         GeckoLib.initialize();

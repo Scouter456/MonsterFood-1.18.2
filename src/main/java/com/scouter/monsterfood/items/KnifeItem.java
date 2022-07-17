@@ -18,7 +18,9 @@ public class KnifeItem extends Item {
         if(pContext.getLevel().getBlockState(pContext.getClickedPos()).getBlock() == Blocks.GRASS_BLOCK){
             this.knife = MFItems.STONE_KNIFE.get();
             return InteractionResult.PASS;
-        }
+        } else if (pContext.getLevel().getBlockState(pContext.getClickedPos()).getBlock() == Blocks.SAND){
+
+        } else return InteractionResult.FAIL;
         return InteractionResult.FAIL;
     }
 

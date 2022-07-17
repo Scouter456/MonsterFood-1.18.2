@@ -1,0 +1,11 @@
+{
+  "mushroom_walk": {
+    "subtitle": "walking_mushroom.walk",
+    "sounds": [
+      {
+        "name": "monsterfood:mushroom_walk",
+        "volume": 0.5
+      }
+    ]
+  }
+}

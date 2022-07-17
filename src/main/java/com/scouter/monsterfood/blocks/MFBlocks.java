@@ -4,10 +4,14 @@ import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.MonsterFood;
 import com.scouter.monsterfood.items.MFItems;
 import com.scouter.monsterfood.setup.Registration;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -28,16 +32,15 @@ public class MFBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MonsterFood.MODID);
     public static final RegistryObject<Block> ORETEST = BLOCKS.register("oretest", () -> new Block(BlockBehaviour.Properties.of(Material.BAMBOO_SAPLING).strength(3.0F, 6.0F)));
     public static final RegistryObject<Block> NIGHTMARE = BLOCKS.register("nightmare", ()-> new NightmareBlock(BlockBehaviour.Properties.of(Material.WATER_PLANT, MaterialColor.COLOR_BROWN).sound(SoundType.CALCITE).randomTicks().noOcclusion()));
+    public static final RegistryObject<Block> GOLD_TRAPDOOR = BLOCKS.register("gold_trapdoor", ()-> new TrapDoorBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.GOLD).sound(SoundType.METAL).randomTicks().noOcclusion()));
+    public static final RegistryObject<Block> SPICE = BLOCKS.register("spice", () -> new LavaSnailSpice(BlockBehaviour.Properties.of(Material.CLAY, MaterialColor.COLOR_RED).sound(SoundType.MOSS).randomTicks().noOcclusion().noCollission()));
 
-
-
-
-
+    public static final DeferredRegister<MobEffect> MOB_EFFECT = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, MonsterFood.MODID);
 
     @SubscribeEvent
     public static void registerItemblocks(RegistryEvent.Register<Item> evt) {
         IForgeRegistry<Item> r = evt.getRegistry();
-        List<RegistryObject<? extends Block>> standard = Arrays.asList(MFBlocks.ORETEST);
+        List<RegistryObject<? extends Block>> standard = Arrays.asList(MFBlocks.ORETEST, MFBlocks.SPICE);
 
         for (RegistryObject<? extends Block> b : standard) {
             LOGGER.info("Registering block item: " + b);

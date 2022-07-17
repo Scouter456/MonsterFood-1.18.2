@@ -4,17 +4,8 @@ import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.MonsterFood;
 import com.scouter.monsterfood.blocks.MFBlockStateProperties;
 import com.scouter.monsterfood.blocks.MFBlocks;
-import net.minecraft.client.model.Model;
-import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.data.models.blockstates.PropertyDispatch;
-import net.minecraft.data.models.blockstates.Variant;
-import net.minecraft.data.models.blockstates.VariantProperties;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.slf4j.Logger;
@@ -33,6 +24,34 @@ public class BlockstateGenerator extends BlockStateProvider {
     }
     @Override
     protected void registerStatesAndModels(){
+        nightmaresBuilder();
+        spiceBuilder();
+
+        trapdoorBlock((TrapDoorBlock) MFBlocks.GOLD_TRAPDOOR.get(), prefix("block/gold_trapdoor"), true);
+
+    }
+
+    private void spiceBuilder(){
+        ModelFile red_spice = models().getExistingFile(prefix("red_spice"));
+        ModelFile white_spice = models().getExistingFile(prefix("white_spice"));
+        ModelFile black_spice = models().getExistingFile(prefix("black_spice"));
+
+        getVariantBuilder(MFBlocks.SPICE.get()).forAllStates(s -> {
+            switch(s.getValue(MFBlockStateProperties.SPICE_TIER)) {
+                case 1:
+                case 4:
+                    return ConfiguredModel.builder().modelFile(black_spice).build();
+                case 2:
+                    return ConfiguredModel.builder().modelFile(red_spice).build();
+                case 3:
+                    return ConfiguredModel.builder().modelFile(white_spice).build();
+            }
+            return ConfiguredModel.builder().modelFile(red_spice).build();
+        });
+
+    }
+
+    private void nightmaresBuilder(){
         String baseName = MFBlocks.NIGHTMARE.getId().getPath() + "s";
         ModelFile nightmares = models().getExistingFile(prefix("nightmares"));
         ModelFile two_nightmares = models().getExistingFile(prefix("two_" + baseName));
@@ -61,6 +80,10 @@ public class BlockstateGenerator extends BlockStateProvider {
                     return ConfiguredModel.builder().modelFile(nightmares).build();
             }
         });
+    }
+
+    private void spiceLayers(){
+
     }
 
     @Override

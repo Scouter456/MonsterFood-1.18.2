@@ -3,6 +3,7 @@
   "block.monsterfood.oretest": "Oretest",
   "entity.monsterfood.walking_mushroom": "Walking Mushroom",
   "item.monsterfood.adamantite_knife": "Adamantite knife",
+  "item.monsterfood.black_spice": "Black Spice",
   "item.monsterfood.bubble_lilly": "Bubble Lilly",
   "item.monsterfood.diamond_knife": "Diamond knife",
   "item.monsterfood.golden_knife": "Golden knife",
@@ -10,10 +11,12 @@
   "item.monsterfood.lava_snail_spawn_egg": "Lava Snail Spawn Egg",
   "item.monsterfood.mithril_knife": "Mithril knife",
   "item.monsterfood.netherite_knife": "Netherite knife",
+  "item.monsterfood.red_spice": "Red Spice",
   "item.monsterfood.stone_knife": "Stone knife",
   "item.monsterfood.walking_mushroom_spawn_egg": "Walking Mushroom Spawn Egg",
   "item.monsterfood.walkingmushroom_feet": "Walking Mushroom Feet",
   "item.monsterfood.walkingmushroom_rump": "Walking Mushroom Rump",
   "item.monsterfood.walkingmushroom_sliver": "Walking Mushroom Sliver",
+  "item.monsterfood.white_spice": "White Spice",
   "item.monsterfood.wood_knife": "Wooden knife"
 }

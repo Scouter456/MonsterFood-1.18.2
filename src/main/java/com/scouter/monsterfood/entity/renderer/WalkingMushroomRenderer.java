@@ -23,13 +23,10 @@ import java.util.UUID;
 import static com.scouter.monsterfood.MonsterFood.prefix;
 
 public class WalkingMushroomRenderer extends GeoEntityRenderer<WalkingMushroomEntity> {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     public WalkingMushroomRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new WalkingMushroomModel());
         this.shadowRadius = 0.25f;
     }
-
 
     @Override
     public ResourceLocation getTextureLocation(WalkingMushroomEntity object) {

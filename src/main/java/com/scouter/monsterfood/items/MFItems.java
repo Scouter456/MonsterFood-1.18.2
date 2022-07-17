@@ -33,14 +33,21 @@ public class MFItems {
     public static final RegistryObject<Item> MITHRIL_KNIFE = ITEMS.register("mithril_knife", () -> new KnifeItem(/**Temporary**/Tiers.NETHERITE ,Registration.defaultBuilder().fireResistant().defaultDurability(/*TODO add mithril tier*/5000)));
 
 
-
-
-    //Foods
+    //Ingredients
     public static final RegistryObject<Item> NIGHTMARE = fromBlock(MFBlocks.NIGHTMARE);
     public static final RegistryObject<Item> WALKING_MUSHROOM_FEET = ITEMS.register("walkingmushroom_feet", () -> new Item(Registration.defaultBuilder()));
     public static final RegistryObject<Item> WALKING_MUSHROOM_BODY = ITEMS.register("walkingmushroom_rump", () -> new Item(Registration.defaultBuilder()));
     public static final RegistryObject<Item> WALKING_MUSHROOM_SLIVER = ITEMS.register("walkingmushroom_sliver", () -> new Item(Registration.defaultBuilder()));
 
+    //Spices
+
+    public static final RegistryObject<Item> WHITE_SPICE = ITEMS.register("white_spice", () -> new Item(Registration.defaultBuilder()));
+    public static final RegistryObject<Item> RED_SPICE = ITEMS.register("red_spice", () -> new Item(Registration.defaultBuilder()));
+    public static final RegistryObject<Item> BLACK_SPICE = ITEMS.register("black_spice", () -> new Item(Registration.defaultBuilder()));
+
+    //Foods
+
+    //Spawn Eggs
     public static final RegistryObject<Item> WALKING_MUSHROOM_SPAWN_EGG = ITEMS.register("walking_mushroom_spawn_egg", ()-> new ForgeSpawnEggItem(MFEntity.WALKINGMUSHROOM,
             0xFFF6F6, 0xE01313, Registration.defaultBuilder()));
 

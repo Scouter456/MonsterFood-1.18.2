@@ -39,6 +39,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -91,12 +92,6 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
         }
     }
 
-    @Override
-    protected void updateControlFlags() {
-        boolean flag = this.getTarget() != null && this.hasLineOfSight(this.getTarget());
-        this.goalSelector.setControlFlag(Goal.Flag.LOOK, flag);
-        super.updateControlFlags();
-    }
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
         if(event.isMoving()) {
 
@@ -136,12 +131,16 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
         return this.factory;
     }
 
-
     @Override
     public int tickTimer() {
         return tickCount;
     }
 
+    @Override
+    public void kill() {
+        this.remove(RemovalReason.KILLED);
+        this.setIsDead(false);
+    }
     @Override
     public void die(DamageSource source) {
         if (!this.level.isClientSide) {
@@ -232,6 +231,8 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
         itemStack.hurtAndBreak((100/(knifeChance.get(itemStack.getItem())/2))/2, pPlayer, (p_41300_) -> {
             p_41300_.broadcastBreakEvent(pHand);});
     }
+
+
     protected SoundEvent getHurtSound(DamageSource damageSource) { return MFSounds.MUSHROOM_WALK.get();}
 
     protected SoundEvent getDeathSound() { return SoundEvents.SNOW_GOLEM_DEATH;}
