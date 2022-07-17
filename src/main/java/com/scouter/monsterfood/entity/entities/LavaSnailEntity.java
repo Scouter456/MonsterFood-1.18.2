@@ -1,30 +1,41 @@
 package com.scouter.monsterfood.entity.entities;
 
 import com.mojang.logging.LogUtils;
-import com.scouter.monsterfood.entity.MushroomEntity;
-import net.minecraft.client.Minecraft;
+import com.scouter.monsterfood.blocks.LavaSnailSpice;
+import com.scouter.monsterfood.blocks.MFBlockStateProperties;
+import com.scouter.monsterfood.blocks.MFBlocks;
+import com.scouter.monsterfood.items.MFItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import org.apache.logging.log4j.core.jmx.Server;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-import org.w3c.dom.Attr;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.IAnimationTickable;
 import software.bernie.geckolib3.core.PlayState;
@@ -34,14 +45,24 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class LavaSnailEntity extends Mob implements IAnimatable, IAnimationTickable {
+public class LavaSnailEntity extends Animal implements IAnimatable, IAnimationTickable {
     private AnimationFactory factory = new AnimationFactory(this);
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final EntityDataAccessor<Boolean> IS_DEAD = SynchedEntityData.defineId(LavaSnailEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Integer>  DEAD_STATE = SynchedEntityData.defineId(MushroomEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer>  DEAD_STATE = SynchedEntityData.defineId(LavaSnailEntity.class, EntityDataSerializers.INT);
 
-    public LavaSnailEntity(EntityType<? extends Mob> p_21368_, Level p_21369_) {
-        super(p_21368_, p_21369_);
+    public LavaSnailEntity(EntityType<? extends Animal> props, Level level) {
+
+
+        super(props, level);
+        //this.moveControl = new LavaSnailEntity.LavaSnailMoveControl(this);
+        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
+        this.setPathfindingMalus(BlockPathTypes.LAVA, 0.0F);
+        this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, 0.0F);
+        this.setPathfindingMalus(BlockPathTypes.DAMAGE_FIRE, 0.0F);
+
+
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
@@ -78,10 +99,17 @@ public class LavaSnailEntity extends Mob implements IAnimatable, IAnimationTicka
                 .add(Attributes.MAX_HEALTH, 50.0D)
                 .add(Attributes.ATTACK_DAMAGE, 12f)
                 .add(Attributes.ATTACK_SPEED, 1f)
-                .add(Attributes.MOVEMENT_SPEED, 0.2f)
+                .add(Attributes.MOVEMENT_SPEED, 0.1f)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 10.0D)
                 .add(Attributes.ARMOR,5.0f)
                 .build();
+    }
+
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new RandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
+        //this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+
     }
 
     @Override
@@ -100,9 +128,58 @@ public class LavaSnailEntity extends Mob implements IAnimatable, IAnimationTicka
             }
         }
     }
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (!this.level.isClientSide) {
+            if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.level, this)) {
+                return;
+            }
+
+            //BlockState blockstateNoLava = MFBlocks.SPICE.get().defaultBlockState().setValue(LavaSnailSpice.SPICE_TIER, Integer.valueOf(2)).setValue(LavaSnailSpice.LAVALOGGED, Boolean.valueOf(false));
+            //.setValue(LavaSnailSpice.SPICE_TIER, Integer.valueOf(1)).setValue(LavaSnailSpice.LAVALOGGED, Boolean.valueOf(true));
+            for(int l = 0; l < 4; ++l) {
+                int i = Mth.floor(this.getX() + (double)((float)(l % 2 * 2 - 1) * 0.25F));
+                int j = Mth.floor(this.getY());
+                int k = Mth.floor(this.getZ() + (double)((float)(l / 2 % 2 * 2 - 1) * 0.25F));
+                BlockPos blockpos1 = new BlockPos(i, j, k);
+                FluidState fluidstate = this.getLevel().getFluidState(blockpos1);
+                boolean flag = fluidstate.getType() == Fluids.LAVA;
+                BlockState blockstate = MFBlocks.SPICE.get().defaultBlockState();
+                BlockState blockstateFlag1 = MFBlocks.SPICE.get().defaultBlockState().setValue(LavaSnailSpice.SPICE_TIER, Integer.valueOf(1)).setValue(LavaSnailSpice.LAVALOGGED, Boolean.valueOf(flag));
+                if (this.isEmptyOrFluid(blockpos1) && (blockstate.canSurvive(this.level, blockpos1) || blockstate.canSurvive(this.level, blockpos1))) {
+                    if(!blockstate.getValue(MFBlockStateProperties.LAVALOGGED)){
+                        this.level.setBlockAndUpdate(blockpos1, blockstateFlag1);
+                    }else{
+                        this.level.setBlockAndUpdate(blockpos1, blockstateFlag1);
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    public boolean isEmptyOrFluid(BlockPos pPos) {
+        return this.level.getBlockState(pPos).isAir() || this.level.getBlockState(pPos).getFluidState().is(FluidTags.LAVA);
+    }
 
     @Override
     public void tick(){
+        if(this.level == null){
+            super.tick();
+        }
+        int i = Mth.floor(this.getX());
+        int j = Mth.floor(this.getY());
+        int k = Mth.floor(this.getZ());
+
+        BlockPos blockpos = new BlockPos(i, j, k);
+        if(this.level.getBlockState(blockpos.below()).is(Blocks.HOPPER)){
+            ItemStack drop = new ItemStack(MFItems.NIGHTMARE.get(), 1);
+            this.remove(Entity.RemovalReason.KILLED);
+            this.setIsDead(false);
+            this.spawnAtLocation(drop, 0);
+        }
 
         if(this.getHealth() <= 25.0D){
             this.getAttribute(Attributes.ARMOR).setBaseValue(60.0f);
@@ -123,12 +200,14 @@ public class LavaSnailEntity extends Mob implements IAnimatable, IAnimationTicka
         this.goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
     }
 
+    //TODO make it give special items when carved when dead
     @Override
     public InteractionResult interact(Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (this.isAlive()) {
             LOGGER.info("Health: " + this.getHealth());
             LOGGER.info("Armor: " + this.getArmorValue());
+            LOGGER.info("Movespeed" + this.getSpeed());
 
             if(this.getDeadState() != 1){
                 return InteractionResult.CONSUME;
@@ -173,6 +252,61 @@ public class LavaSnailEntity extends Mob implements IAnimatable, IAnimationTicka
 
         return prev;
     }
+
+    /*
+    @Override
+    public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
+        //if (worldIn.getBlockState(pos).getFluidState().is(FluidTags.WATER) || worldIn.getBlockState(pos).getFluidState().is(FluidTags.LAVA)) {
+        //    return 20.0F;
+       // } else {
+        //    return this.isInLava() ? 10.0F:10.0F;
+        //}
+        return 5.0F;
+    }*/
+
+    @Override
+    public void travel(Vec3 travelVector) {
+        boolean liquid = this.shouldSwim();
+        if (this.isEffectiveAi() && liquid) {
+            this.moveRelative(this.getSpeed()*0.25f, travelVector);
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+        } else {
+            super.travel(travelVector);
+        }
+    }
+
+    @Override
+    public void kill() {
+        this.remove(RemovalReason.KILLED);
+        this.setIsDead(false);
+    }
+    /*
+    @Override
+    public void travel(Vec3 pTravelVector) {
+        if (this.isEffectiveAi() && (this.isInWater() || this.isInLava())) {
+            this.moveRelative(0.05F, pTravelVector);
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+        } else {
+            super.travel(pTravelVector);
+        }
+
+    }*/
+
+    public boolean shouldSwim() {
+        return getMaxFluidHeight() >= 0.1F || this.isInLava() || this.isInWaterOrBubble();
+    }
+
+    private double getMaxFluidHeight() {
+        return Math.max(this.getFluidHeight(FluidTags.LAVA), this.getFluidHeight(FluidTags.WATER));
+    }
+    @Nullable
+    @Override
+    public AgeableMob getBreedOffspring(ServerLevel p_146743_, AgeableMob p_146744_) {
+        return null;
+    }
+
     @Override
     protected void defineSynchedData(){
         super.defineSynchedData();
@@ -222,8 +356,50 @@ public class LavaSnailEntity extends Mob implements IAnimatable, IAnimationTicka
         return true;
     }
 
-    @Override
-    public boolean canBeCollidedWith() {
-        return true;
+    static class LavaSnailMoveControl extends MoveControl {
+        private final LavaSnailEntity lavasnail;
+
+        public LavaSnailMoveControl(LavaSnailEntity p_32433_) {
+            super(p_32433_);
+            this.lavasnail = p_32433_;
+        }
+
+        public void tick() {
+            LivingEntity livingentity = this.lavasnail.getTarget();
+            if (this.lavasnail.isInWater()) {
+                if (livingentity != null && livingentity.getY() > this.lavasnail.getY()) {
+                    this.lavasnail.setDeltaMovement(this.lavasnail.getDeltaMovement().add(0.0D, 0.002D, 0.0D));
+                }
+
+                if (this.operation != MoveControl.Operation.MOVE_TO || this.lavasnail.getNavigation().isDone()) {
+                    this.lavasnail.setSpeed(0.0F);
+                    return;
+                }
+
+                double d0 = this.wantedX - this.lavasnail.getX();
+                double d1 = this.wantedY - this.lavasnail.getY();
+                double d2 = this.wantedZ - this.lavasnail.getZ();
+                double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+                d1 /= d3;
+                float f = (float)(Mth.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F;
+                this.lavasnail.setYRot(this.rotlerp(this.lavasnail.getYRot(), f, 90.0F));
+                this.lavasnail.yBodyRot = this.lavasnail.getYRot();
+                float f1 = (float)(this.speedModifier * this.lavasnail.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                float f2 = Mth.lerp(0.125F, this.lavasnail.getSpeed(), f1);
+                this.lavasnail.setSpeed(f2);
+                this.lavasnail.setDeltaMovement(this.lavasnail.getDeltaMovement().add((double)f2 * d0 * 0.005D, (double)f2 * d1 * 0.1D, (double)f2 * d2 * 0.005D));
+            } else {
+                if (!this.lavasnail.onGround) {
+                    this.lavasnail.setDeltaMovement(this.lavasnail.getDeltaMovement().add(0.0D, -0.008D, 0.0D));
+                }
+
+                super.tick();
+            }
+
+        }
     }
+    //@Override
+    //public boolean canBeCollidedWith() {
+    //    return true;
+    //}
 }
