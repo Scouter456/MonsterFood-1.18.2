@@ -187,6 +187,12 @@ public class LavaSnailEntity extends Animal implements IAnimatable, IAnimationTi
             this.setDeadState(1);
         }
 
+        if(this.getHealth() > 25.0D){
+            this.getAttribute(Attributes.ARMOR).setBaseValue(5.0f);
+            this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.1f);
+            this.setDeadState(0);
+        }
+
         super.tick();
     }
 
@@ -207,9 +213,10 @@ public class LavaSnailEntity extends Animal implements IAnimatable, IAnimationTi
         if (this.isAlive()) {
             LOGGER.info("Health: " + this.getHealth());
             LOGGER.info("Armor: " + this.getArmorValue());
-            LOGGER.info("Movespeed" + this.getSpeed());
-
+            LOGGER.info("Movespeed: " + this.getSpeed());
+            LOGGER.info("Dead state: " + this.getDeadState());
             if(this.getDeadState() != 1){
+                this.setDeadState(3);
                 return InteractionResult.CONSUME;
             }
 
@@ -240,10 +247,13 @@ public class LavaSnailEntity extends Animal implements IAnimatable, IAnimationTi
     @Override
     public boolean hurt(DamageSource pSource, float pAmount){
         boolean prev = super.hurt(pSource, pAmount);
-        Player player = (Player) pSource.getEntity();
         if(this.getDeadState() != 1){
             return prev;
         }
+        if(pSource.getEntity() instanceof Player player){
+            player = (Player) pSource.getEntity();
+        }
+
         if(pSource.getEntity() != null && this.getDeadState() == 1 && !this.getIsDead()){
             pSource.getEntity().hurt(DamageSource.mobAttack((LivingEntity)pSource.getEntity()), 10f);
             this.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(12f);
@@ -397,6 +407,10 @@ public class LavaSnailEntity extends Animal implements IAnimatable, IAnimationTi
             }
 
         }
+    }
+    @Override
+    public boolean isPushable() {
+        return false;
     }
     //@Override
     //public boolean canBeCollidedWith() {

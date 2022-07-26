@@ -30,12 +30,25 @@ public class LanguageGenerator extends LanguageProvider {
 
         //FOODS
         addItem(MFItems.WALKING_MUSHROOM_FEET, "Walking Mushroom Feet");
+        addItem(MFItems.CUT_WALKING_MUSHROOM_FEET, "Cut Walking Mushroom Feet");
         addItem(MFItems.WALKING_MUSHROOM_BODY, "Walking Mushroom Rump");
+        addItem(MFItems.CUT_WALKING_MUSHROOM_BODY, "Cut Walking Mushroom Rump");
         addItem(MFItems.WALKING_MUSHROOM_SLIVER, "Walking Mushroom Sliver");
         addItem(MFItems.WHITE_SPICE, "White Spice");
         addItem(MFItems.BLACK_SPICE, "Black Spice");
         addItem(MFItems.RED_SPICE, "Red Spice");
+        addItem(MFItems.SALT, "Salt");
+        addItem(MFItems.BUTTER, "Butter");
+        addItem(MFItems.ONION, "Onion");
+        addItem(MFItems.CUT_ONION, "Cut Onion");
+        addItem(MFItems.GARLIC, "Garlic");
+        addItem(MFItems.GARLIC_CLOVES, "Garlic Cloves");
+        addItem(MFItems.SKILLET, "Skillet");
+        addItem(MFItems.RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET, "Raw Walking Mushroom Garlic Butter Skillet");
+        addItem(MFItems.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET, "Cooked Walking Mushroom Garlic Butter Skillet");
+
         addBlock(MFBlocks.NIGHTMARE, "Nightmare");
+        addBlock(MFBlocks.SPICE, "Spice Block");
 
         //EGGS
         addItem(MFItems.WALKING_MUSHROOM_SPAWN_EGG, "Walking Mushroom Spawn Egg");
@@ -43,6 +56,7 @@ public class LanguageGenerator extends LanguageProvider {
 
         //ENTITIES
         addEntityType(MFEntity.WALKINGMUSHROOM, "Walking Mushroom");
+        addEntityType(MFEntity.LAVASNAIL, "Lava Snail");
     }
 
     @Override

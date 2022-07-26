@@ -1,5 +1,7 @@
 package com.scouter.monsterfood;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.events.ClientEvents;
 import com.scouter.monsterfood.setup.ClientSetup;
@@ -26,7 +28,7 @@ public class MonsterFood
     public static final String MODID = "monsterfood";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
-
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public MonsterFood()
     {
         Registration.init();

@@ -13,5 +13,8 @@ public class RenderLayerRegistration {
         RenderType solid = RenderType.solid();
 
         ItemBlockRenderTypes.setRenderLayer(MFBlocks.NIGHTMARE.get(),cutout);
+
+        ItemBlockRenderTypes.setRenderLayer(MFBlocks.SKILLET.get(),cutout);
+        ItemBlockRenderTypes.setRenderLayer(MFBlocks.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET.get(),cutout);
     }
 }

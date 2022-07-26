@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,food=1": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_1"
+    },
+    "facing=south,food=1": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_1",
+      "y": 180
+    },
+    "facing=west,food=1": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_1",
+      "y": 270
+    },
+    "facing=east,food=1": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_1",
+      "y": 90
+    },
+    "facing=north,food=2": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_2"
+    },
+    "facing=south,food=2": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_2",
+      "y": 180
+    },
+    "facing=west,food=2": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_2",
+      "y": 270
+    },
+    "facing=east,food=2": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_2",
+      "y": 90
+    },
+    "facing=north,food=3": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_3"
+    },
+    "facing=south,food=3": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_3",
+      "y": 180
+    },
+    "facing=west,food=3": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_3",
+      "y": 270
+    },
+    "facing=east,food=3": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_3",
+      "y": 90
+    },
+    "facing=north,food=4": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_4"
+    },
+    "facing=south,food=4": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_4",
+      "y": 180
+    },
+    "facing=west,food=4": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_4",
+      "y": 270
+    },
+    "facing=east,food=4": {
+      "model": "monsterfood:block/cooked_walking_mushroom_garlic_butter_skillet_food_4",
+      "y": 90
+    }
+  }
+}

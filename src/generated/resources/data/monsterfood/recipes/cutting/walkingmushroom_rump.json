@@ -1,0 +1,17 @@
+{
+  "type": "monsterfood:cutting",
+  "ingredients": [
+    {
+      "item": "monsterfood:walkingmushroom_rump"
+    }
+  ],
+  "tool": {
+    "tag": "forge:knives"
+  },
+  "result": [
+    {
+      "item": "monsterfood:cut_walkingmushroom_rump",
+      "count": 2
+    }
+  ]
+}

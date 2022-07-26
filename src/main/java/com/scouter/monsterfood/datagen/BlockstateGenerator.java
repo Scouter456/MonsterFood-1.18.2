@@ -4,8 +4,12 @@ import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.MonsterFood;
 import com.scouter.monsterfood.blocks.MFBlockStateProperties;
 import com.scouter.monsterfood.blocks.MFBlocks;
+import com.scouter.monsterfood.blocks.SkilletBlock;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.slf4j.Logger;
@@ -18,17 +22,35 @@ import static com.scouter.monsterfood.MonsterFood.prefix;
 
 public class BlockstateGenerator extends BlockStateProvider {
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static final int DEFAULT_ANGLE_OFFSET = 180;
 
     public BlockstateGenerator(DataGenerator gen, ExistingFileHelper exFileHelper) {
         super(gen, MonsterFood.MODID, exFileHelper);
+    }
+
+    private String blockName(Block block) {
+        return block.getRegistryName().getPath();
+    }
+
+    public ResourceLocation resourceBlock(String path) {
+        return new ResourceLocation(MonsterFood.MODID, "block/" + path);
+    }
+
+    public ModelFile existingModel(Block block) {
+        return new ModelFile.ExistingModelFile(resourceBlock(blockName(block)), models().existingFileHelper);
+    }
+
+    public ModelFile existingModel(String path) {
+        return new ModelFile.ExistingModelFile(resourceBlock(path), models().existingFileHelper);
     }
     @Override
     protected void registerStatesAndModels(){
         nightmaresBuilder();
         spiceBuilder();
-
+        skilletBuilder();
         trapdoorBlock((TrapDoorBlock) MFBlocks.GOLD_TRAPDOOR.get(), prefix("block/gold_trapdoor"), true);
-
+        skilletFoodBlock(MFBlocks.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET.get());
+        //horizontalBlock(MFBlocks.NIGHTMARE.get(), models().orientableVertical(MFBlocks.NIGHTMARE.getId().getPath(), prefix("block/nightmare_side"), prefix("block/nightmare_fron")));
     }
 
     private void spiceBuilder(){
@@ -47,6 +69,44 @@ public class BlockstateGenerator extends BlockStateProvider {
                     return ConfiguredModel.builder().modelFile(white_spice).build();
             }
             return ConfiguredModel.builder().modelFile(red_spice).build();
+        });
+
+    }
+    private void skilletFoodBlock(Block block){
+        getVariantBuilder(block).forAllStates(s ->{
+            int foods = s.getValue(MFBlockStateProperties.FOOD);
+
+            String suffix = "_food_" + (foods);
+
+            return ConfiguredModel.builder()
+                    .modelFile(existingModel(blockName(block) + suffix))
+                    .rotationY(((int) s.getValue(SkilletBlock.FACING).toYRot() + DEFAULT_ANGLE_OFFSET) % 360)
+                    .build();
+        });
+    }
+    private void skilletBuilder(){
+        ModelFile skillet = models().getExistingFile(prefix("skillet"));
+
+        List<ConfiguredModel> activeModels = new ArrayList<>();
+        for(ModelFile modelFile : Arrays.asList(skillet)){
+            activeModels.add(new ConfiguredModel(modelFile,0,0,false));
+            activeModels.add(new ConfiguredModel(modelFile,0,90,false));
+            activeModels.add(new ConfiguredModel(modelFile,0,180,false));
+            activeModels.add(new ConfiguredModel(modelFile,0,270,false));
+        }
+        getVariantBuilder(MFBlocks.SKILLET.get()).forAllStates(s -> {
+            switch(s.getValue(BlockStateProperties.HORIZONTAL_FACING)) {
+                case NORTH:
+                    return Arrays.copyOfRange(activeModels.toArray(new ConfiguredModel[0]), 0,1) ;
+                case EAST:
+                    return Arrays.copyOfRange(activeModels.toArray(new ConfiguredModel[0]), 1,2) ;
+                case SOUTH:
+                    return Arrays.copyOfRange(activeModels.toArray(new ConfiguredModel[0]), 2,3) ;
+                case WEST:
+                    return Arrays.copyOfRange(activeModels.toArray(new ConfiguredModel[0]), 3,4) ;
+                default:
+                    return ConfiguredModel.builder().modelFile(skillet).build();
+            }
         });
 
     }

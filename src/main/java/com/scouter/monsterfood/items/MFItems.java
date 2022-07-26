@@ -4,8 +4,6 @@ import com.scouter.monsterfood.MonsterFood;
 import com.scouter.monsterfood.blocks.MFBlocks;
 import com.scouter.monsterfood.entity.MFEntity;
 import com.scouter.monsterfood.setup.Registration;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeSpawnEggItem;
@@ -33,19 +31,40 @@ public class MFItems {
     public static final RegistryObject<Item> MITHRIL_KNIFE = ITEMS.register("mithril_knife", () -> new KnifeItem(/**Temporary**/Tiers.NETHERITE ,Registration.defaultBuilder().fireResistant().defaultDurability(/*TODO add mithril tier*/5000)));
 
 
-    //Ingredients
+    //Monster parts
     public static final RegistryObject<Item> NIGHTMARE = fromBlock(MFBlocks.NIGHTMARE);
+    public static final RegistryObject<Item> SPICE = fromBlock(MFBlocks.SPICE);
+    public static final RegistryObject<Item> CUTTING_BOARD = fromBlock(MFBlocks.CUTTING_BOARD_BLOCK);
     public static final RegistryObject<Item> WALKING_MUSHROOM_FEET = ITEMS.register("walkingmushroom_feet", () -> new Item(Registration.defaultBuilder()));
     public static final RegistryObject<Item> WALKING_MUSHROOM_BODY = ITEMS.register("walkingmushroom_rump", () -> new Item(Registration.defaultBuilder()));
     public static final RegistryObject<Item> WALKING_MUSHROOM_SLIVER = ITEMS.register("walkingmushroom_sliver", () -> new Item(Registration.defaultBuilder()));
 
-    //Spices
+    //Ingredients
+    public static final RegistryObject<Item> CUT_WALKING_MUSHROOM_FEET = ITEMS.register("cut_walkingmushroom_feet", () -> new Item(Registration.ingredientsBuilder()));
+    public static final RegistryObject<Item> CUT_WALKING_MUSHROOM_BODY = ITEMS.register("cut_walkingmushroom_rump", () -> new Item(Registration.ingredientsBuilder()));
+    public static final RegistryObject<Item> SALT = ITEMS.register("salt", () -> new Item(Registration.ingredientsBuilder()));
+    public static final RegistryObject<Item> GARLIC = ITEMS.register("garlic", () -> new Item(Registration.ingredientsBuilder()));
+    public static final RegistryObject<Item> GARLIC_CLOVES = ITEMS.register("garlic_cloves", () -> new Item(Registration.ingredientsBuilder()));
 
-    public static final RegistryObject<Item> WHITE_SPICE = ITEMS.register("white_spice", () -> new Item(Registration.defaultBuilder()));
-    public static final RegistryObject<Item> RED_SPICE = ITEMS.register("red_spice", () -> new Item(Registration.defaultBuilder()));
-    public static final RegistryObject<Item> BLACK_SPICE = ITEMS.register("black_spice", () -> new Item(Registration.defaultBuilder()));
+    public static final RegistryObject<Item> ONION = ITEMS.register("onion", () -> new Item(Registration.ingredientsBuilder()));
+    public static final RegistryObject<Item> CUT_ONION = ITEMS.register("cut_onion", () -> new Item(Registration.ingredientsBuilder()));
+
+    public static final RegistryObject<Item> BUTTER = ITEMS.register("butter", () -> new Item(Registration.ingredientsBuilder()));
+
+
+    //Spices
+    public static final RegistryObject<Item> WHITE_SPICE = ITEMS.register("white_spice", () -> new Item(Registration.ingredientsBuilder()));
+    public static final RegistryObject<Item> RED_SPICE = ITEMS.register("red_spice", () -> new Item(Registration.ingredientsBuilder().fireResistant()));
+    public static final RegistryObject<Item> BLACK_SPICE = ITEMS.register("black_spice", () -> new Item(Registration.ingredientsBuilder()));
 
     //Foods
+    public static final RegistryObject<Item> RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET = fromBlockToFood(MFBlocks.RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET);
+    public static final RegistryObject<Item> COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET = fromBlockToFood(MFBlocks.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET);
+
+
+    //Cooking stuff
+    public static final RegistryObject<Item> SKILLET = fromBlock(MFBlocks.SKILLET);
+
 
     //Spawn Eggs
     public static final RegistryObject<Item> WALKING_MUSHROOM_SPAWN_EGG = ITEMS.register("walking_mushroom_spawn_egg", ()-> new ForgeSpawnEggItem(MFEntity.WALKINGMUSHROOM,
@@ -60,7 +79,25 @@ public class MFItems {
         }
     };
 
+    public static CreativeModeTab creativeTabIngredients = new CreativeModeTab(MonsterFood.MODID) {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(CUT_WALKING_MUSHROOM_FEET.get());
+        }
+    };
+
+    public static CreativeModeTab creativeTabFoods = new CreativeModeTab(MonsterFood.MODID) {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET.get());
+        }
+    };
+
     public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block){
         return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), Registration.defaultBuilder()));
+    }
+
+    public static <B extends Block> RegistryObject<Item> fromBlockToFood(RegistryObject<B> block){
+        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), Registration.foodsBuilder().stacksTo(1)));
     }
 }

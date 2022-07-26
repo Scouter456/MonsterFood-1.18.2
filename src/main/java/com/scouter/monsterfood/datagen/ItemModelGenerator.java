@@ -35,10 +35,22 @@ public class ItemModelGenerator extends ItemModelProvider {
         singleTex(MFItems.WALKING_MUSHROOM_BODY);
         singleTex(MFItems.WALKING_MUSHROOM_FEET);
         singleTex(MFItems.WALKING_MUSHROOM_SLIVER);
+        singleTex(MFItems.CUT_WALKING_MUSHROOM_FEET);
+        singleTex(MFItems.CUT_WALKING_MUSHROOM_BODY);
         singleTex(MFItems.WHITE_SPICE);
         singleTex(MFItems.RED_SPICE);
         singleTex(MFItems.BLACK_SPICE);
+        singleTex(MFItems.SALT);
+        singleTex(MFItems.BUTTER);
+        singleTex(MFItems.ONION);
+        singleTex(MFItems.GARLIC);
+        //singleTex(MFItems.RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET);
+        //singleTex(MFItems.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET);
+        singleTex(MFItems.CUT_ONION);
+        singleTex(MFItems.GARLIC_CLOVES);
+
         toBlockModel(MFBlocks.GOLD_TRAPDOOR.get(), "gold_trapdoor_bottom");
+
         knife(MFItems.WOOD_KNIFE);
         knife(MFItems.STONE_KNIFE);
         knife(MFItems.IRON_KNIFE);
@@ -48,7 +60,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         knife(MFItems.ADAMANTITE_KNIFE);
         knife(MFItems.MITHRIL_KNIFE);
 
-
+        //skillet(MFItems.SKILLET);
     }
     private void toBlock(Block b) {
         toBlockModel(b, b.getRegistryName().getPath());
@@ -66,15 +78,28 @@ public class ItemModelGenerator extends ItemModelProvider {
         return generated(item.getId().getPath(), prefix("item/" + item.getId().getPath()));
     }
 
-    private ItemModelBuilder handheld(String name, ResourceLocation... layers){
+    private ItemModelBuilder handheldknife(String name, ResourceLocation... layers){
         ItemModelBuilder builder = withExistingParent(name, prefix("item/knifehandheld"));
         for (int i = 0; i < layers.length; i++) {
             builder = builder.texture("layer" + i, layers[i]);
         }
         return builder;
     }
+
+    private ItemModelBuilder handheldskillet(String name, ResourceLocation... layers){
+        ItemModelBuilder builder = withExistingParent(name, prefix("item/skillethandheld"));
+        for (int i = 0; i < layers.length; i++) {
+            builder = builder.texture("layer" + i, layers[i]);
+        }
+        return builder;
+    }
+
     private ItemModelBuilder knife(RegistryObject<Item> item){
-        return handheld(item.getId().getPath(), prefix("item/knives/" + item.getId().getPath()));
+        return handheldknife(item.getId().getPath(), prefix("item/knives/" + item.getId().getPath()));
+    }
+
+    private ItemModelBuilder skillet(RegistryObject<Item> item){
+        return handheldknife(item.getId().getPath(), prefix("item/skillet/" + item.getId().getPath()));
     }
 
     private ItemModelBuilder generated(String name, ResourceLocation... layers) {

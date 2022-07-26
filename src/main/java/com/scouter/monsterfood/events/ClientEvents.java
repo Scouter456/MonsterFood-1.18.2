@@ -15,9 +15,4 @@ import org.slf4j.Logger;
 public class ClientEvents {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final ResourceLocation TEXTURE = new ResourceLocation(MonsterFood.MODID, "textures/mob_effect/effect.png");
-
-    @SubscribeEvent
-    public static void renderEffect(RenderGameOverlayEvent.Post event){
-        if(Minecraft.getInstance().player == null) return;
-    }
 }

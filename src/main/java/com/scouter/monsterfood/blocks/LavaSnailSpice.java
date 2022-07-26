@@ -2,8 +2,13 @@ package com.scouter.monsterfood.blocks;
 
 import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.blocks.interfaces.SimpleLavaLoggedBlock;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -30,6 +35,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
+import java.awt.*;
+import java.text.Format;
 import java.util.Random;
 
 public class LavaSnailSpice extends Block implements SimpleLavaLoggedBlock {
@@ -68,6 +75,7 @@ public class LavaSnailSpice extends Block implements SimpleLavaLoggedBlock {
     @Override
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
         super.randomTick(pState, pLevel, pPos, pRandom);
+        pLevel.dimensionType().equals(Level.NETHER);
         if(pLevel.getBlockState(pPos).getFluidState().getType() != Fluids.LAVA) {
             pLevel.setBlockAndUpdate(pPos, pState.setValue(SPICE_TIER, Integer.valueOf(1)));
         }

@@ -55,11 +55,11 @@ public class NightmareBlock extends Block implements SimpleWaterloggedBlock {
     //Effects
     @Override
     public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
-        if(!(pEntity instanceof Player)){
+        if (!(pEntity instanceof Player)) {
             return;
         }
-        Player playerEntity = (Player)pEntity;
-        playerEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 1000, 1));
+        Player playerEntity = (Player) pEntity;
+        playerEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 1000, 1, false, false, false));
         super.stepOn(pLevel, pPos, pState, pEntity);
     }
 
@@ -67,19 +67,19 @@ public class NightmareBlock extends Block implements SimpleWaterloggedBlock {
     @Override
     public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         if (pContext instanceof EntityCollisionContext) {
-            EntityCollisionContext entitycollisioncontext = (EntityCollisionContext)pContext;
+            EntityCollisionContext entitycollisioncontext = (EntityCollisionContext) pContext;
             Entity entity = entitycollisioncontext.getEntity();
-            if(entity == null){}
-            if(pState.getValue(NIGHTMARES) == 1){
+            if (entity == null) {}
+            if (pState.getValue(NIGHTMARES) == 1) {
                 return ONE_NIGHTMARE_AABB;
             }
-            if(pState.getValue(NIGHTMARES) == 2){
+            if (pState.getValue(NIGHTMARES) == 2) {
                 return TWO_NIGHTMARE_AABB;
             }
-            if(pState.getValue(NIGHTMARES) == 3){
+            if (pState.getValue(NIGHTMARES) == 3) {
                 return THREE_NIGHTMARE_AABB;
             }
-            if(pState.getValue(NIGHTMARES) == 4){
+            if (pState.getValue(NIGHTMARES) == 4) {
                 return FOUR_NIGHTMARE_AABB;
             }
         }
@@ -88,7 +88,7 @@ public class NightmareBlock extends Block implements SimpleWaterloggedBlock {
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        switch(pState.getValue(NIGHTMARES)) {
+        switch (pState.getValue(NIGHTMARES)) {
             case 1:
             default:
                 return ONE_NIGHTMARE_AABB;
@@ -147,4 +147,6 @@ public class NightmareBlock extends Block implements SimpleWaterloggedBlock {
     public FluidState getFluidState(BlockState pState) {
         return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
     }
+
+
 }

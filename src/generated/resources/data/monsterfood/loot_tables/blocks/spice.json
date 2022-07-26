@@ -3,98 +3,136 @@
   "pools": [
     {
       "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
-          "type": "minecraft:item",
-          "functions": [
+          "type": "minecraft:alternatives",
+          "children": [
             {
-              "function": "minecraft:set_count",
+              "type": "minecraft:alternatives",
               "conditions": [
                 {
-                  "condition": "minecraft:block_state_property",
-                  "block": "monsterfood:spice",
-                  "properties": {
-                    "spice_tier": "1"
+                  "condition": "minecraft:inverted",
+                  "term": {
+                    "condition": "minecraft:match_tool",
+                    "predicate": {
+                      "enchantments": [
+                        {
+                          "enchantment": "minecraft:silk_touch",
+                          "levels": {
+                            "min": 1
+                          }
+                        }
+                      ]
+                    }
                   }
                 }
               ],
-              "count": 1.0,
-              "add": false
-            },
-            {
-              "function": "minecraft:explosion_decay"
-            }
-          ],
-          "name": "monsterfood:black_spice"
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "conditions": [
+              "children": [
                 {
-                  "condition": "minecraft:block_state_property",
-                  "block": "monsterfood:spice",
-                  "properties": {
-                    "spice_tier": "2"
-                  }
-                }
-              ],
-              "count": 1.0,
-              "add": false
-            },
-            {
-              "function": "minecraft:explosion_decay"
-            }
-          ],
-          "name": "monsterfood:red_spice"
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "conditions": [
+                  "type": "minecraft:item",
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "monsterfood:spice",
+                      "properties": {
+                        "spice_tier": "1"
+                      }
+                    }
+                  ],
+                  "functions": [
+                    {
+                      "function": "minecraft:explosion_decay"
+                    },
+                    {
+                      "function": "minecraft:set_count",
+                      "count": 1.0,
+                      "add": false
+                    }
+                  ],
+                  "name": "monsterfood:black_spice"
+                },
                 {
-                  "condition": "minecraft:block_state_property",
-                  "block": "monsterfood:spice",
-                  "properties": {
-                    "spice_tier": "3"
-                  }
-                }
-              ],
-              "count": 1.0,
-              "add": false
-            },
-            {
-              "function": "minecraft:explosion_decay"
-            }
-          ],
-          "name": "monsterfood:white_spice"
-        },
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "conditions": [
+                  "type": "minecraft:item",
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "monsterfood:spice",
+                      "properties": {
+                        "spice_tier": "2"
+                      }
+                    }
+                  ],
+                  "functions": [
+                    {
+                      "function": "minecraft:explosion_decay"
+                    },
+                    {
+                      "function": "minecraft:set_count",
+                      "count": 1.0,
+                      "add": false
+                    }
+                  ],
+                  "name": "monsterfood:red_spice"
+                },
                 {
-                  "condition": "minecraft:block_state_property",
-                  "block": "monsterfood:spice",
-                  "properties": {
-                    "spice_tier": "4"
-                  }
+                  "type": "minecraft:item",
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "monsterfood:spice",
+                      "properties": {
+                        "spice_tier": "3"
+                      }
+                    }
+                  ],
+                  "functions": [
+                    {
+                      "function": "minecraft:explosion_decay"
+                    },
+                    {
+                      "function": "minecraft:set_count",
+                      "count": 1.0,
+                      "add": false
+                    }
+                  ],
+                  "name": "monsterfood:white_spice"
+                },
+                {
+                  "type": "minecraft:item",
+                  "conditions": [
+                    {
+                      "condition": "minecraft:block_state_property",
+                      "block": "monsterfood:spice",
+                      "properties": {
+                        "spice_tier": "4"
+                      }
+                    }
+                  ],
+                  "functions": [
+                    {
+                      "function": "minecraft:explosion_decay"
+                    },
+                    {
+                      "function": "minecraft:set_count",
+                      "count": 1.0,
+                      "add": false
+                    }
+                  ],
+                  "name": "monsterfood:black_spice"
                 }
-              ],
-              "count": 1.0,
-              "add": false
+              ]
             },
             {
-              "function": "minecraft:explosion_decay"
+              "type": "minecraft:alternatives",
+              "children": [
+                {
+                  "type": "minecraft:item",
+                  "name": "monsterfood:spice"
+                }
+              ]
             }
-          ],
-          "name": "monsterfood:black_spice"
+          ]
         }
       ]
     }

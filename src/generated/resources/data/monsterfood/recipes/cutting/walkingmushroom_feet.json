@@ -1,0 +1,17 @@
+{
+  "type": "monsterfood:cutting",
+  "ingredients": [
+    {
+      "item": "monsterfood:walkingmushroom_feet"
+    }
+  ],
+  "tool": {
+    "tag": "forge:knives"
+  },
+  "result": [
+    {
+      "item": "monsterfood:cut_walkingmushroom_feet",
+      "count": 2
+    }
+  ]
+}

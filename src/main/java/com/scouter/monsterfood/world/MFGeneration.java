@@ -5,17 +5,19 @@ import com.scouter.monsterfood.entity.MFEntity;
 import com.scouter.monsterfood.world.feature.MFConfiguredFeatures;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.slf4j.Logger;
 
 import java.util.List;
-import java.util.Locale;
 
 public class MFGeneration {
     private static final Logger LOGGER = LogUtils.getLogger();
+
+    @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void generateFeatures(BiomeLoadingEvent event){
         if (event.getCategory() != Biome.BiomeCategory.DESERT){
             event.getGeneration().addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, MFConfiguredFeatures.NIGHTMARE_COLONY.getHolder().get());

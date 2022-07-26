@@ -1,5 +1,8 @@
 package com.scouter.monsterfood.utils;
 
+import com.scouter.monsterfood.MonsterFood;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
@@ -27,5 +30,9 @@ public class utils {
 
         MinecraftServer server = slevel.getServer();
         server.tell(new TickTask(server.getTickCount() + delay, task));
+    }
+
+    public static MutableComponent getTranslation(String key, Object... args) {
+        return new TranslatableComponent(MonsterFood.MODID + "." + key, args);
     }
 }
