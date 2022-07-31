@@ -1,22 +1,15 @@
 package com.scouter.monsterfood.entity;
 
 import com.scouter.monsterfood.MonsterFood;
+import com.scouter.monsterfood.entity.entities.JellyFishEntity;
 import com.scouter.monsterfood.entity.entities.LavaSnailEntity;
 import com.scouter.monsterfood.entity.entities.WalkingMushroomEntity;
-import com.scouter.monsterfood.items.MFItems;
-import com.scouter.monsterfood.setup.Registration;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SpawnEggItem;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryObject;
+
 import static com.scouter.monsterfood.MonsterFood.prefix;
 
 public class MFEntity {
@@ -32,4 +25,9 @@ public class MFEntity {
                     .sized(2, 0.6f)
                     .build(prefix("lava_snail").toString()));
 
+
+    public static final RegistryObject<EntityType<JellyFishEntity>> JELLY_FISH = ENTITY_TYPES.register("jelly_fish",
+            () -> EntityType.Builder.of(JellyFishEntity::new, MobCategory.CREATURE)
+                    .sized(2, -2f)
+                    .build(prefix("jelly_fish").toString()));
 }
