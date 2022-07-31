@@ -17,12 +17,12 @@ public class BlockTagsGenerator extends BlockTagsProvider {
     @Override
     protected void addTags(){
         //Add a tag to allow block to get mined with a pickaxe
-        tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(MFBlocks.ORETEST.get());
+        //tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        //        .add(MFBlocks.ORETEST.get());
 
         //Add a tag for minimum requirement of tool for block
-        tag(BlockTags.NEEDS_IRON_TOOL)
-                .add(MFBlocks.ORETEST.get());
+        //tag(BlockTags.NEEDS_IRON_TOOL)
+        //        .add(MFBlocks.ORETEST.get());
     }
 
 
