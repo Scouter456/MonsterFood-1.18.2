@@ -18,7 +18,7 @@ public class LanguageGenerator extends LanguageProvider {
 
 
         addItem(MFItems.bubble_lilly, "Bubble Lilly");
-
+        //KNIVES
         addItem(MFItems.WOOD_KNIFE, "Wooden knife");
         addItem(MFItems.STONE_KNIFE, "Stone knife");
         addItem(MFItems.IRON_KNIFE, "Iron knife");

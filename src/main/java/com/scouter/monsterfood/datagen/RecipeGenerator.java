@@ -29,8 +29,8 @@ public class RecipeGenerator extends RecipeProvider {
 */
         ShapelessRecipeBuilder.shapeless(MFItems.RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET.get())
                 .requires(MFItems.RED_SPICE.get())
-                .requires(MFTags.Items.ONION)
-                .requires(MFTags.Items.GARLIC)
+                .requires(MFTags.Items.CUT_GARLIC)
+                .requires(MFTags.Items.CUT_ONION)
                 .requires(MFTags.Items.BUTTER)
                 .requires(MFItems.CUT_WALKING_MUSHROOM_FEET.get(),3)
                 .requires(MFItems.CUT_WALKING_MUSHROOM_BODY.get(),1)
@@ -46,6 +46,9 @@ public class RecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_" + Items.IRON_INGOT.getDescriptionId().toLowerCase(), has(Items.IRON_INGOT)).save(consumer);
 
         simpleCookingRecipe(consumer, "smelting", RecipeSerializer.SMELTING_RECIPE, 100, MFItems.RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET.get(), MFItems.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET.get(), 0.50F);
+        //simpleCookingRecipe(consumer, "smelting", RecipeSerializer.SMELTING_RECIPE, 100, MFItems.CUT_ONION.get(), MFItems.COOKED_CUT_ONION.get(), 0.50F);
+        //simpleCookingRecipe(consumer, "smelting", RecipeSerializer.SMELTING_RECIPE, 100, MFItems.GARLIC_CLOVES.get(), MFItems.COOKED_GARLIC_CLOVES.get(), 0.50F);
+
         CuttingRecipes.register(consumer);
     }
 }

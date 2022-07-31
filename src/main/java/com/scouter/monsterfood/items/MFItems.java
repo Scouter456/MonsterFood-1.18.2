@@ -46,6 +46,7 @@ public class MFItems {
     public static final RegistryObject<Item> GARLIC = ITEMS.register("garlic", () -> new Item(Registration.ingredientsBuilder()));
     public static final RegistryObject<Item> GARLIC_CLOVES = ITEMS.register("garlic_cloves", () -> new Item(Registration.ingredientsBuilder()));
 
+
     public static final RegistryObject<Item> ONION = ITEMS.register("onion", () -> new Item(Registration.ingredientsBuilder()));
     public static final RegistryObject<Item> CUT_ONION = ITEMS.register("cut_onion", () -> new Item(Registration.ingredientsBuilder()));
 
@@ -58,7 +59,7 @@ public class MFItems {
     public static final RegistryObject<Item> BLACK_SPICE = ITEMS.register("black_spice", () -> new Item(Registration.ingredientsBuilder()));
 
     //Foods
-    public static final RegistryObject<Item> RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET = fromBlockToFood(MFBlocks.RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET);
+    public static final RegistryObject<Item> RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET = ITEMS.register("raw_walking_mushroom_garlic_butter_skillet", () -> new Item(Registration.foodsBuilder()));
     public static final RegistryObject<Item> COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET = fromBlockToFood(MFBlocks.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET);
 
 
@@ -69,8 +70,10 @@ public class MFItems {
     //Spawn Eggs
     public static final RegistryObject<Item> WALKING_MUSHROOM_SPAWN_EGG = ITEMS.register("walking_mushroom_spawn_egg", ()-> new ForgeSpawnEggItem(MFEntity.WALKINGMUSHROOM,
             0xFFF6F6, 0xE01313, Registration.defaultBuilder()));
-
     public static final RegistryObject<Item> LAVA_SNAIL_SPAWN_EGG = ITEMS.register("lava_snail_spawn_egg", ()-> new ForgeSpawnEggItem(MFEntity.LAVASNAIL,
+            0xFFF6F6, 0xE01313, Registration.defaultBuilder()));
+
+    public static final RegistryObject<Item> JELLY_FISH_SPAWN_EGG = ITEMS.register("jelly_fish_spawn_egg", ()-> new ForgeSpawnEggItem(MFEntity.JELLY_FISH,
             0xFFF6F6, 0xE01313, Registration.defaultBuilder()));
     public static CreativeModeTab creativeTab = new CreativeModeTab(MonsterFood.MODID) {
         @Override

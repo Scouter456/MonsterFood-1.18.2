@@ -12,8 +12,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.stream.Stream;
 
 public class MushroomGarlicButterSkillet extends SkilletBlock{
-    public MushroomGarlicButterSkillet(Properties props, MFBlockEnums state) {
-        super(props, state);
+    public MushroomGarlicButterSkillet(Properties props) {
+        super(props);
     }
 
     protected static final VoxelShape SKILLET = Stream.of(

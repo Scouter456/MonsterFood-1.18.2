@@ -10,8 +10,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -38,10 +41,10 @@ public class SkilletBlock extends Block {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty FOOD = MFBlockStateProperties.FOOD;
-    public static MFBlockEnums foodState;
-    public SkilletBlock(Properties props, MFBlockEnums state) {
+
+    public SkilletBlock(Properties props) {
         super(props);
-        this.foodState = state;
+
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(FOOD, Integer.valueOf(4)));
     }
     protected static final VoxelShape SHAPES = Stream.of(
@@ -59,21 +62,20 @@ public class SkilletBlock extends Block {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(this.foodState == raw){
-            LOGGER.info("I am raw!");
-            return InteractionResult.FAIL;
-        }
-        if(this.foodState == cooked){
-            LOGGER.info("I am cooked!");
-            return InteractionResult.SUCCESS;
-        }
-        LOGGER.info("I do nothing!");
-        return InteractionResult.FAIL;
+        return InteractionResult.SUCCESS;
     }
 
 
 
     //PLACEMENT
+    @Override
+    public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
+        if (!pState.canSurvive(pLevel, pCurrentPos)) {
+            return Blocks.AIR.defaultBlockState();
+        }
+      return super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
+    }
+
     @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
         BlockPos blockpos = pPos.below();

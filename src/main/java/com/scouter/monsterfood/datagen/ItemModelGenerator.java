@@ -44,6 +44,8 @@ public class ItemModelGenerator extends ItemModelProvider {
         singleTex(MFItems.BUTTER);
         singleTex(MFItems.ONION);
         singleTex(MFItems.GARLIC);
+        singleTex(MFItems.RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET);
+
         //singleTex(MFItems.RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET);
         //singleTex(MFItems.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET);
         singleTex(MFItems.CUT_ONION);
