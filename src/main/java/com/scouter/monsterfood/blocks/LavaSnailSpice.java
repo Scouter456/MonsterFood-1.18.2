@@ -2,13 +2,8 @@ package com.scouter.monsterfood.blocks;
 
 import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.blocks.interfaces.SimpleLavaLoggedBlock;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -35,8 +30,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
-import java.awt.*;
-import java.text.Format;
 import java.util.Random;
 
 public class LavaSnailSpice extends Block implements SimpleLavaLoggedBlock {
@@ -61,11 +54,6 @@ public class LavaSnailSpice extends Block implements SimpleLavaLoggedBlock {
     public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
         return pType == PathComputationType.AIR && !this.hasCollision ? true : super.isPathfindable(pState, pLevel, pPos, pType);
     }
-    /*
-    @Override
-    public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return BLOCK_LAYER;
-    }*/
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
@@ -75,7 +63,6 @@ public class LavaSnailSpice extends Block implements SimpleLavaLoggedBlock {
     @Override
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
         super.randomTick(pState, pLevel, pPos, pRandom);
-        pLevel.dimensionType().equals(Level.NETHER);
         if(pLevel.getBlockState(pPos).getFluidState().getType() != Fluids.LAVA) {
             pLevel.setBlockAndUpdate(pPos, pState.setValue(SPICE_TIER, Integer.valueOf(1)));
         }
@@ -92,18 +79,12 @@ public class LavaSnailSpice extends Block implements SimpleLavaLoggedBlock {
 
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         BlockState blockstate = pLevel.getBlockState(pPos);
-        LOGGER.info("Spice tier: " + blockstate.getValue(SPICE_TIER));
-        if(itemstack.is(Items.REDSTONE)){
-            pLevel.setBlockAndUpdate(pPos, blockstate.setValue(SPICE_TIER, Integer.valueOf(1)));
-            return InteractionResult.CONSUME;
-        }
+        ItemStack itemstack1 = new ItemStack(Items.BUCKET);
+
         if(itemstack.is(Items.MILK_BUCKET)){
-            pLevel.setBlockAndUpdate(pPos, blockstate.setValue(SPICE_TIER, Integer.valueOf(2)));
-            return InteractionResult.CONSUME;
-        }
-        if(itemstack.is(Items.WATER_BUCKET)){
             pLevel.setBlockAndUpdate(pPos, blockstate.setValue(SPICE_TIER, Integer.valueOf(3)));
-            return InteractionResult.CONSUME;
+            pPlayer.setItemInHand(pHand, itemstack1);
+            return InteractionResult.CONSUME_PARTIAL;
         }
         return InteractionResult.CONSUME;
     }
