@@ -1,13 +1,18 @@
 package com.scouter.monsterfood.setup;
 
 import com.scouter.monsterfood.MonsterFood;
+import com.scouter.monsterfood.blocks.MFBlockEntity;
+import com.scouter.monsterfood.client.renderer.CuttingBoardRenderer;
 import com.scouter.monsterfood.client.renderer.RenderLayerRegistration;
 import com.scouter.monsterfood.entity.MFEntity;
+import com.scouter.monsterfood.entity.renderer.JellyFishRenderer;
 import com.scouter.monsterfood.entity.renderer.LavaSnailRenderer;
 import com.scouter.monsterfood.entity.renderer.WalkingMushroomRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
