@@ -41,6 +41,6 @@ public class LootGenerator extends LootTableProvider {
 
     @Override
     public String getName() {
-        return "MVCreatures loot tables";
+        return "Monster Food loot tables";
     }
 }
