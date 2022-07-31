@@ -2,11 +2,13 @@ buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://maven.parchmentmc.org' }
+        maven { url = 'https://maven.parchmentmc.org'}
+        maven{  url = "https://repo.spongepowered.org/repository/maven-public/"}
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
         classpath 'org.parchmentmc:librarian:1.+'
     }
 }
@@ -17,7 +19,12 @@ plugins {
 }
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
+apply plugin: "org.spongepowered.mixin"
 
+
+mixin {
+    add sourceSets.main, "monsterfood.refmap.json"
+}
 version = '0.1-1.18.2'
 group = 'com.scouter.monsterfood' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'monsterfood'
@@ -50,6 +57,7 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
+            arg '-mixin.config=monsterfood.mixins.json'
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
             // "SCAN": For mods scan.
@@ -74,6 +82,7 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+            arg "-mixin.config=monsterfood.mixins.json"
 
             property 'forge.logging.markers', 'REGISTRIES'
 
@@ -161,12 +170,16 @@ dependencies {
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
 
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
     // Examples using mod jars from ./libs
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+
 }
 
 // Example for how to get properties into the manifest for reading at runtime.
@@ -179,9 +192,12 @@ jar {
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "scouter456",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs"            : "monsterfood.mixins.json"
+
         ])
     }
+
 }
 
 // Example configuration to allow publishing using the maven-publish plugin
