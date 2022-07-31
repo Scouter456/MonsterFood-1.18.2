@@ -105,6 +105,7 @@ public class LavaSnailEntity extends Animal implements IAnimatable, IAnimationTi
                 .build();
     }
 
+    //TODO more goals and custom goals
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new RandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
@@ -207,6 +208,7 @@ public class LavaSnailEntity extends Animal implements IAnimatable, IAnimationTi
     }
 
     //TODO make it give special items when carved when dead
+    //TODO custom loot table
     @Override
     public InteractionResult interact(Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
@@ -263,17 +265,6 @@ public class LavaSnailEntity extends Animal implements IAnimatable, IAnimationTi
         return prev;
     }
 
-    /*
-    @Override
-    public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
-        //if (worldIn.getBlockState(pos).getFluidState().is(FluidTags.WATER) || worldIn.getBlockState(pos).getFluidState().is(FluidTags.LAVA)) {
-        //    return 20.0F;
-       // } else {
-        //    return this.isInLava() ? 10.0F:10.0F;
-        //}
-        return 5.0F;
-    }*/
-
     @Override
     public void travel(Vec3 travelVector) {
         boolean liquid = this.shouldSwim();
@@ -291,18 +282,6 @@ public class LavaSnailEntity extends Animal implements IAnimatable, IAnimationTi
         this.remove(RemovalReason.KILLED);
         this.setIsDead(false);
     }
-    /*
-    @Override
-    public void travel(Vec3 pTravelVector) {
-        if (this.isEffectiveAi() && (this.isInWater() || this.isInLava())) {
-            this.moveRelative(0.05F, pTravelVector);
-            this.move(MoverType.SELF, this.getDeltaMovement());
-            this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
-        } else {
-            super.travel(pTravelVector);
-        }
-
-    }*/
 
     public boolean shouldSwim() {
         return getMaxFluidHeight() >= 0.1F || this.isInLava() || this.isInWaterOrBubble();
@@ -366,48 +345,6 @@ public class LavaSnailEntity extends Animal implements IAnimatable, IAnimationTi
         return true;
     }
 
-    static class LavaSnailMoveControl extends MoveControl {
-        private final LavaSnailEntity lavasnail;
-
-        public LavaSnailMoveControl(LavaSnailEntity p_32433_) {
-            super(p_32433_);
-            this.lavasnail = p_32433_;
-        }
-
-        public void tick() {
-            LivingEntity livingentity = this.lavasnail.getTarget();
-            if (this.lavasnail.isInWater()) {
-                if (livingentity != null && livingentity.getY() > this.lavasnail.getY()) {
-                    this.lavasnail.setDeltaMovement(this.lavasnail.getDeltaMovement().add(0.0D, 0.002D, 0.0D));
-                }
-
-                if (this.operation != MoveControl.Operation.MOVE_TO || this.lavasnail.getNavigation().isDone()) {
-                    this.lavasnail.setSpeed(0.0F);
-                    return;
-                }
-
-                double d0 = this.wantedX - this.lavasnail.getX();
-                double d1 = this.wantedY - this.lavasnail.getY();
-                double d2 = this.wantedZ - this.lavasnail.getZ();
-                double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-                d1 /= d3;
-                float f = (float)(Mth.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F;
-                this.lavasnail.setYRot(this.rotlerp(this.lavasnail.getYRot(), f, 90.0F));
-                this.lavasnail.yBodyRot = this.lavasnail.getYRot();
-                float f1 = (float)(this.speedModifier * this.lavasnail.getAttributeValue(Attributes.MOVEMENT_SPEED));
-                float f2 = Mth.lerp(0.125F, this.lavasnail.getSpeed(), f1);
-                this.lavasnail.setSpeed(f2);
-                this.lavasnail.setDeltaMovement(this.lavasnail.getDeltaMovement().add((double)f2 * d0 * 0.005D, (double)f2 * d1 * 0.1D, (double)f2 * d2 * 0.005D));
-            } else {
-                if (!this.lavasnail.onGround) {
-                    this.lavasnail.setDeltaMovement(this.lavasnail.getDeltaMovement().add(0.0D, -0.008D, 0.0D));
-                }
-
-                super.tick();
-            }
-
-        }
-    }
     @Override
     public boolean isPushable() {
         return false;
