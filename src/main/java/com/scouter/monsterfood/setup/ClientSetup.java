@@ -19,5 +19,12 @@ public class ClientSetup {
         RenderLayerRegistration.init();
         EntityRenderers.register(MFEntity.WALKINGMUSHROOM.get(), WalkingMushroomRenderer::new);
         EntityRenderers.register(MFEntity.LAVASNAIL.get(), LavaSnailRenderer::new);
+        EntityRenderers.register(MFEntity.JELLY_FISH.get(), JellyFishRenderer::new);
+        //OverlayRegistry.registerOverlayAbove(HOTBAR_ELEMENT, "name", StructureOverlay.HUD_STRUCTURE);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(MFBlockEntity.CUTTING_BOARD_BLOCK_ENTITY.get(), CuttingBoardRenderer::new);
     }
 }
