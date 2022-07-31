@@ -30,7 +30,7 @@ public class DataGenerators {
     private static void registerClientProviders(DataGenerator generator, GatherDataEvent evt) {
         ExistingFileHelper helper = evt.getExistingFileHelper();
         generator.addProvider(new LootGenerator(generator));
-        //generator.addProvider(new BlockTagsGenerator(generator, helper));
+        generator.addProvider(new BlockTagsGenerator(generator, helper));
     }
 
     private static void registerServerProviders(DataGenerator generator, GatherDataEvent evt) {
@@ -43,7 +43,6 @@ public class DataGenerators {
         generator.addProvider(new BlockstateGenerator(generator, helper));
         generator.addProvider(new SoundsGenerator(generator, helper));
         generator.addProvider(new ItemTagsGenerator(generator, blockTags, helper));
-        // generator.addProvider(new BlockModelGenerator(generator, helper));
         generator.addProvider(new ItemModelGenerator(generator, helper));
         generator.addProvider(new LanguageGenerator(generator));
         //generator.addProvider(new AdvancementGenerator(generator, helper));
