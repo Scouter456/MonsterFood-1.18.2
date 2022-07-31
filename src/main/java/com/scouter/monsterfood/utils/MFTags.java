@@ -27,11 +27,17 @@ public class MFTags {
     }
 
     public static class Items {
-        public static final TagKey<Item>  KNIVES = forgeTag("knives");
-        public static final TagKey<Item>  BUTTER = forgeTag("butter");
-        public static final TagKey<Item>  ONION = forgeTag("onion");
-        public static final TagKey<Item>  GARLIC = forgeTag("garlic");
-        public static final TagKey<Item>  SPICE = forgeTag("spice");
+        public static final TagKey<Item>  KNIVES = tag("knives");
+        public static final TagKey<Item>  BUTTER = tag("butter");
+        public static final TagKey<Item>  ONION = tag("onion");
+        public static final TagKey<Item>  GARLIC = tag("garlic");
+
+        public static final TagKey<Item>  CUT_ONION = tag("cut_onion");
+        public static final TagKey<Item>  CUT_GARLIC = tag("cut_garlic");
+
+        public static final TagKey<Item>  COOKED_CUT_ONION = tag("cooked_cut_onion");
+        public static final TagKey<Item>  COOKED_CUT_GARLIC = tag("cooked_cut_garlic");
+        public static final TagKey<Item>  SPICE = tag("spice");
 
         private static TagKey<Item> tag(String name){
             return ItemTags.create(prefix(name));
