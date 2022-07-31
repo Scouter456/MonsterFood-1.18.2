@@ -10,21 +10,21 @@ import static com.scouter.monsterfood.MonsterFood.MODID;
 import static com.scouter.monsterfood.MonsterFood.prefix;
 
 public class SoundsGenerator extends SoundDefinitionsProvider {
-    /**
-     * Creates a new instance of this data provider.
-     *
-     * @param generator The data generator instance provided by the event you are initializing this provider in.
-     * @param helper    The existing file helper provided by the event you are initializing this provider in.
-     */
+
     protected SoundsGenerator(DataGenerator generator, ExistingFileHelper helper) {
         super(generator, MODID, helper);
     }
 
     @Override
     public void registerSounds() {
-        this.add(MFSounds.MUSHROOM_WALK.get(), SoundDefinition.definition().subtitle("walking_mushroom.walk")
-                .with(SoundDefinitionsProvider.sound(prefix( "mushroom_walk")).volume(0.5d)));
+        this.add(MFSounds.MUSHROOM_WALK.get(), SoundDefinition.definition()
+                .subtitle("walking_mushroom.walk")
+                .with(SoundDefinitionsProvider
+                        .sound(prefix( "mushroom_walk"))
+                        .volume(0.5d)
+                        .attenuationDistance(17)));
 
+        //this.add(MFSounds.MUSHROOM_WALK.get(), SoundDefinition.definition().with(SoundDefinitionsProvider.sound(prefix("mushroom_walk")).attenuationDistance(16)));
     }
 
     @Override
