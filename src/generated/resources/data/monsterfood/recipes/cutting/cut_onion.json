@@ -1,0 +1,17 @@
+{
+  "type": "monsterfood:cutting",
+  "ingredients": [
+    {
+      "item": "monsterfood:cut_onion"
+    }
+  ],
+  "tool": {
+    "tag": "monsterfood:onion"
+  },
+  "result": [
+    {
+      "item": "monsterfood:cut_onion",
+      "count": 4
+    }
+  ]
+}

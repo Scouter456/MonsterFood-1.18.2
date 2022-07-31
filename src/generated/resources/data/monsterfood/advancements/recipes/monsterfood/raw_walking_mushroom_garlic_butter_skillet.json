@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "monsterfood:raw_walking_mushroom_garlic_butter_skillet"
+    ]
+  },
+  "criteria": {
+    "has_mushroom_feet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "monsterfood:cut_walkingmushroom_feet"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "monsterfood:raw_walking_mushroom_garlic_butter_skillet"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_mushroom_feet",
+      "has_the_recipe"
+    ]
+  ]
+}

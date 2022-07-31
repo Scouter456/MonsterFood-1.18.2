@@ -4,7 +4,8 @@
     "sounds": [
       {
         "name": "monsterfood:mushroom_walk",
-        "volume": 0.5
+        "volume": 0.5,
+        "attenuation_distance": 17
       }
     ]
   }

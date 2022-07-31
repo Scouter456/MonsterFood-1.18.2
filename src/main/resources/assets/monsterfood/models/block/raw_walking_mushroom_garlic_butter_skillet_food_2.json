@@ -3,11 +3,9 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "monsterfood:block/skillet",
-		"1": "monsterfood:block/cooked_mushroomgarlicbutter",
+		"1": "monsterfood:block/raw_mushroomgarlicbutter",
 		"particle": "monsterfood:block/skillet"
 	},
-	"ambientocclusion": false,
-	"shade": false,
 	"elements": [
 		{
 			"name": "Pan_side_left",

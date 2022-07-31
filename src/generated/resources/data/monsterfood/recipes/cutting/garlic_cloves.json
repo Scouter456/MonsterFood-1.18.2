@@ -1,0 +1,17 @@
+{
+  "type": "monsterfood:cutting",
+  "ingredients": [
+    {
+      "item": "monsterfood:garlic_cloves"
+    }
+  ],
+  "tool": {
+    "tag": "monsterfood:cut_garlic"
+  },
+  "result": [
+    {
+      "item": "monsterfood:garlic_cloves",
+      "count": 4
+    }
+  ]
+}

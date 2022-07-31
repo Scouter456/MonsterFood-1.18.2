@@ -171,7 +171,7 @@ public class WalkingMushroomEntity extends MushroomEntity implements IAnimatable
     @Override
     public ResourceLocation getDeadLootTable() {
     return MUSHROOM_LOOT;}
-
+    //TODO change loot table to work correctly
     @Override
     public InteractionResult interact(Player pPlayer, InteractionHand pHand) {
         if (this.isAlive()) {

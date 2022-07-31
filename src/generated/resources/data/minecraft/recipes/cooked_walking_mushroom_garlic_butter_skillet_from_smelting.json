@@ -3,12 +3,7 @@
   "ingredient": {
     "item": "monsterfood:raw_walking_mushroom_garlic_butter_skillet"
   },
-  "result": {
-    "item": "monsterfood:cooked_walking_mushroom_garlic_butter_skillet"
-  },
-  "container": {
-    "item": "monsterfood:skillet"
-  },
+  "result": "monsterfood:cooked_walking_mushroom_garlic_butter_skillet",
   "experience": 0.5,
   "cookingtime": 100
 }

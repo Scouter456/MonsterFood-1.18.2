@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "monsterfood:red_spice"
+    },
+    {
+      "tag": "monsterfood:cut_garlic"
+    },
+    {
+      "tag": "monsterfood:cut_onion"
+    },
+    {
+      "tag": "monsterfood:butter"
+    },
+    {
+      "item": "monsterfood:cut_walkingmushroom_feet"
+    },
+    {
+      "item": "monsterfood:cut_walkingmushroom_feet"
+    },
+    {
+      "item": "monsterfood:cut_walkingmushroom_feet"
+    },
+    {
+      "item": "monsterfood:cut_walkingmushroom_rump"
+    },
+    {
+      "item": "monsterfood:skillet"
+    }
+  ],
+  "result": {
+    "item": "monsterfood:raw_walking_mushroom_garlic_butter_skillet"
+  }
+}
