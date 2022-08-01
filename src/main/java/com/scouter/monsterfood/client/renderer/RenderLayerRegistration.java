@@ -3,6 +3,7 @@ package com.scouter.monsterfood.client.renderer;
 import com.scouter.monsterfood.blocks.MFBlocks;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.level.block.Blocks;
 
 public class RenderLayerRegistration {
     public static void init() {
@@ -16,5 +17,8 @@ public class RenderLayerRegistration {
 
         ItemBlockRenderTypes.setRenderLayer(MFBlocks.SKILLET.get(),cutout);
         ItemBlockRenderTypes.setRenderLayer(MFBlocks.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET.get(),cutout);
+        ItemBlockRenderTypes.setRenderLayer(MFBlocks.RED_BAMBOO_SAPLING.get(), cutout);
+        ItemBlockRenderTypes.setRenderLayer(MFBlocks.RED_BAMBOO.get(), cutout);
+
     }
 }

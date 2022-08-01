@@ -30,8 +30,10 @@ public class MFBlocks {
     public static final RegistryObject<Block> ORETEST = BLOCKS.register("oretest", () -> new Block(BlockBehaviour.Properties.of(Material.BAMBOO_SAPLING).strength(3.0F, 6.0F).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> NIGHTMARE = BLOCKS.register("nightmare", () -> new NightmareBlock(BlockBehaviour.Properties.of(Material.WATER_PLANT, MaterialColor.COLOR_BROWN).sound(SoundType.CALCITE).randomTicks().noOcclusion()));
     public static final RegistryObject<Block> GOLD_TRAPDOOR = BLOCKS.register("gold_trapdoor", () -> new TrapDoorBlock(BlockBehaviour.Properties.of(Material.METAL, MaterialColor.GOLD).sound(SoundType.METAL).randomTicks().noOcclusion()));
-    public static final RegistryObject<Block> SPICE = BLOCKS.register("spice", () -> new LavaSnailSpice(BlockBehaviour.Properties.of(Material.CLAY, MaterialColor.COLOR_RED).sound(SoundType.MOSS).randomTicks().noOcclusion().noCollission()));
+    public static final RegistryObject<Block> SPICE = BLOCKS.register("spice", () -> new LavaSnailSpice(BlockBehaviour.Properties.of(Material.CLAY, MaterialColor.COLOR_RED).sound(SoundType.MOSS).randomTicks().noOcclusion().noCollission().instabreak()));
 
+    public static final RegistryObject<Block> RED_BAMBOO_SAPLING = BLOCKS.register("red_bamboo_sapling", () -> new RedBambooSaplingBlock(BlockBehaviour.Properties.of(Material.BAMBOO_SAPLING).randomTicks().instabreak().noCollission().strength(1.0F).sound(SoundType.BAMBOO_SAPLING)));
+    public static final RegistryObject<Block> RED_BAMBOO = BLOCKS.register("red_bamboo", () -> new RedBambooBlock(BlockBehaviour.Properties.of(Material.BAMBOO, MaterialColor.PLANT).randomTicks().instabreak().strength(1.0F).sound(SoundType.BAMBOO).noOcclusion().dynamicShape()));
 
     //TODO custom cutting board block
     public static final RegistryObject<Block> CUTTING_BOARD_BLOCK = BLOCKS.register("cutting_board", () -> new CuttingBoardBlock());

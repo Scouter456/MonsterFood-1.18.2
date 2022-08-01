@@ -45,6 +45,24 @@ public class RecipeGenerator extends RecipeProvider {
                 .define('a', Items.IRON_INGOT)
                 .unlockedBy("has_" + Items.IRON_INGOT.getDescriptionId().toLowerCase(), has(Items.IRON_INGOT)).save(consumer);
 
+        ShapedRecipeBuilder.shaped(Items.STICK, 1)
+                .define('#', MFBlocks.RED_BAMBOO.get())
+                .pattern("#")
+                .pattern("#")
+                .group("sticks")
+                .unlockedBy("has_red_bamboo", has(MFBlocks.RED_BAMBOO.get()))
+                .save(consumer, "stick_from_red_bamboo_item");
+
+        ShapedRecipeBuilder.shaped(Blocks.SCAFFOLDING, 6)
+                .define('~', Items.STRING)
+                .define('I', MFBlocks.RED_BAMBOO.get())
+                .pattern("I~I")
+                .pattern("I I")
+                .pattern("I I")
+                .unlockedBy("has_red_bamboo", has(MFBlocks.RED_BAMBOO.get()))
+                .save(consumer);
+
+
         simpleCookingRecipe(consumer, "smelting", RecipeSerializer.SMELTING_RECIPE, 100, MFItems.RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET.get(), MFItems.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET.get(), 0.50F);
         //simpleCookingRecipe(consumer, "smelting", RecipeSerializer.SMELTING_RECIPE, 100, MFItems.CUT_ONION.get(), MFItems.COOKED_CUT_ONION.get(), 0.50F);
         //simpleCookingRecipe(consumer, "smelting", RecipeSerializer.SMELTING_RECIPE, 100, MFItems.GARLIC_CLOVES.get(), MFItems.COOKED_GARLIC_CLOVES.get(), 0.50F);

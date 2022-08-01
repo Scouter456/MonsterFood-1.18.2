@@ -11,6 +11,7 @@ import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
@@ -37,6 +38,8 @@ public class LootTableBlocks extends BlockLoot {
 
     @Override
     protected void addTables() {
+        dropSelf(MFBlocks.RED_BAMBOO.get());
+        dropOther(MFBlocks.RED_BAMBOO_SAPLING.get(), MFBlocks.RED_BAMBOO.get());
         //dropSelf(MFBlocks.ORETEST.get());
         //dropSelf(MFBlocks.NIGHTMARE.get());
         add(MFBlocks.SPICE.get(), (spices) -> spices(MFBlocks.SPICE.get(), MFItems.BLACK_SPICE.get(), MFItems.RED_SPICE.get(), MFItems.WHITE_SPICE.get()));

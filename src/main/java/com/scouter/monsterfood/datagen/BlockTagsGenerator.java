@@ -3,9 +3,11 @@ package com.scouter.monsterfood.datagen;
 import com.scouter.monsterfood.MonsterFood;
 import com.scouter.monsterfood.blocks.MFBlocks;
 import com.scouter.monsterfood.setup.Registration;
+import com.scouter.monsterfood.utils.MFTags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +18,16 @@ public class BlockTagsGenerator extends BlockTagsProvider {
 
     @Override
     protected void addTags(){
-        //Add a tag to allow block to get mined with a pickaxe
+        tag(BlockTags.MINEABLE_WITH_AXE)
+                .add(MFBlocks.RED_BAMBOO.get());
+
+        tag(MFTags.Blocks.RED_BAMBOO_PLANTABLE_ON)
+                .addTags(BlockTags.DIRT)
+                .addTag(BlockTags.SAND)
+                .add(Blocks.GRAVEL)
+                .add(MFBlocks.RED_BAMBOO_SAPLING.get())
+                .add(MFBlocks.RED_BAMBOO.get());
+
         //tag(BlockTags.MINEABLE_WITH_PICKAXE)
         //        .add(MFBlocks.ORETEST.get());
 

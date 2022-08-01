@@ -15,7 +15,7 @@ import static com.scouter.monsterfood.MonsterFood.prefix;
 
 public class MFTags {
     public static class Blocks {
-        public static final TagKey<Block> t= tag("t");
+        public static final TagKey<Block> RED_BAMBOO_PLANTABLE_ON= tag("red_bamboo_plantable_on");
         private static TagKey<Block> tag(String name){
             return BlockTags.create(prefix(name));
 

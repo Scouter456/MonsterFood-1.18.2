@@ -35,6 +35,7 @@ public class MFItems {
     public static final RegistryObject<Item> NIGHTMARE = fromBlock(MFBlocks.NIGHTMARE);
     public static final RegistryObject<Item> SPICE = fromBlock(MFBlocks.SPICE);
     public static final RegistryObject<Item> CUTTING_BOARD = fromBlock(MFBlocks.CUTTING_BOARD_BLOCK);
+    public static final RegistryObject<Item> RED_BAMBOO = fromBlock(MFBlocks.RED_BAMBOO);
     public static final RegistryObject<Item> WALKING_MUSHROOM_FEET = ITEMS.register("walkingmushroom_feet", () -> new Item(Registration.defaultBuilder()));
     public static final RegistryObject<Item> WALKING_MUSHROOM_BODY = ITEMS.register("walkingmushroom_rump", () -> new Item(Registration.defaultBuilder()));
     public static final RegistryObject<Item> WALKING_MUSHROOM_SLIVER = ITEMS.register("walkingmushroom_sliver", () -> new Item(Registration.defaultBuilder()));

@@ -47,12 +47,16 @@ public class LanguageGenerator extends LanguageProvider {
         addItem(MFItems.RAW_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET, "Raw Walking Mushroom Garlic Butter Skillet");
         addItem(MFItems.COOKED_WALKING_MUSHROOM_GARLIC_BUTTER_SKILLET, "Cooked Walking Mushroom Garlic Butter Skillet");
 
+        //BLOCKS
+        addBlock(MFBlocks.RED_BAMBOO, "Red Bamboo");
+
         addBlock(MFBlocks.NIGHTMARE, "Nightmare");
         addBlock(MFBlocks.SPICE, "Spice Block");
 
         //EGGS
         addItem(MFItems.WALKING_MUSHROOM_SPAWN_EGG, "Walking Mushroom Spawn Egg");
         addItem(MFItems.LAVA_SNAIL_SPAWN_EGG, "Lava Snail Spawn Egg");
+        addItem(MFItems.JELLY_FISH_SPAWN_EGG, "Jellyfish Spawn Egg");
 
         //ENTITIES
         addEntityType(MFEntity.WALKINGMUSHROOM, "Walking Mushroom");
