@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:dirt",
+    "#minecraft:sand",
+    "minecraft:gravel",
+    "monsterfood:red_bamboo_sapling",
+    "monsterfood:red_bamboo"
+  ]
+}

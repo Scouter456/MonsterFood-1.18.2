@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/tinted_cross",
+  "textures": {
+    "cross": "monsterfood:block/red_bamboo_stage0"
+  }
+}
