@@ -41,7 +41,7 @@ public class MFConfiguredFeatures {
     )));
 
     public static final RegistryObject<PlacedFeature> RED_BAMBOO_PODZOL_PLACED = PLACED_FEATURES.register(RED_BAMBOO_FEATURE_PODZOL_NAME, () -> new PlacedFeature(RED_BAMBOO_FEATURE_PODZOL.getHolder().orElseThrow(), ImmutableList.of(
-            RarityFilter.onAverageOnceEvery(300),
+            RarityFilter.onAverageOnceEvery(400),
             NoiseBasedCountPlacement.of(160, 35.0D, 0.5D),
             InSquarePlacement.spread(),
             PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
