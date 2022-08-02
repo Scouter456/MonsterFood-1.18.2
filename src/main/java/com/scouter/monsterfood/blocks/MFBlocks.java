@@ -4,10 +4,12 @@ import com.mojang.logging.LogUtils;
 import com.scouter.monsterfood.MonsterFood;
 import com.scouter.monsterfood.setup.Registration;
 import net.minecraft.world.effect.MobEffect;
-
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
