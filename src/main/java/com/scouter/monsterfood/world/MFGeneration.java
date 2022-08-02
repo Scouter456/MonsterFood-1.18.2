@@ -27,7 +27,7 @@ public class MFGeneration {
 
         }
 
-        if (event.getCategory() == Biome.BiomeCategory.JUNGLE) {
+        if (event.getName().equals(new ResourceLocation("minecraft", "bamboo_jungle"))) {
             event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MFConfiguredFeatures.RED_BAMBOO_NO_PODZOL_PLACED.getHolder().get());
             event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, MFConfiguredFeatures.RED_BAMBOO_PODZOL_PLACED.getHolder().get());
         }
